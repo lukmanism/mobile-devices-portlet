@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+</head>
+<body>
+<form></form>
+<script type="text/javascript">
+
+var test = {
+
+'general': {'title': 'General', 'name': '', 'desc': '', 'multiple': false, 'type': 'form', 'value': [
+		{'title': 'profile_name', 'name': 'Profile Name', 'desc': 'Display name of the profile (shown on the device)', 'type': 'text'},
+		{'title': 'identifier', 'name': 'identifier', 'desc': 'Unique identifier for the profile (e.g. com.company.profile)', 'type': 'text'},
+		{'title': 'organization', 'name': 'organization', 'desc': 'Name of the organization for the profile', 'type': 'text'},
+		{'title': 'description', 'name': 'description', 'desc': 'Brief explanation of the contents or purpose of the profile', 'type': 'textarea'},
+		{'title': 'consent_message', 'name': 'consent_message', 'desc': 'Brief message that will displayed during profile installation', 'type': 'textarea'},
+		{'title': 'security', 'name': 'security', 'desc': 'Display name of the profile (shown on the device)', 'type': 'select', 'value': {
+			0: 'Always',
+			1: 'With Authentication',
+			2: 'Never'
+		}},
+		{'title': 'remove_pofile', 'name': 'Automatically Remove Profile', 'desc': 'Controls when the profile will be automatically removed', 'type': 'select', 'value': {
+			0: 'Never',
+			1: 'On date',
+			2: 'After interval'
+		}}
+]},
+'passcode': {'title': 'Passcode', 'name': '', 'desc': '', 'multiple': false, 'type': 'form', 'value': [
+		{'title': 'allow_simple_value', 'name': 'Allow Simple Value', 'desc': 'Permit the use of reporting, ascending, and descending character sequence', 'type': 'checkbox', 'value': [0,1]},
+		{'title': 'require_alphanumeric_value', 'name': 'require_alphanumeric_value', 'desc': 'Require passcodes to contain at least one letter', 'type': 'checkbox', 'value': [0,1]},
+		{'title': 'minimum_password_length', 'name': 'minimum_password_length', 'desc': 'Minimum number of passcode characters allowed', 'type': 'select', 'value': [0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]},
+		{'title': 'minimum_complex_character', 'name': 'minimum_complex_character', 'desc': 'Minimum number of non-alphanumeric characters allowed', 'type': 'select', 'value': [0,1,2,3,4]},
+		{'title': 'maximum_passcode_age', 'name': 'maximum_passcode_age', 'desc': 'Days (1-730) after which passcode must be changed', 'type': 'text'},
+		{'title': 'maximum_auto_lock', 'name': 'maximum_auto_lock', 'desc': 'Device automatically locks when minutes elapse', 'type': 'select', 'value': [0,1,2,3,4,5,12,15]},
+		{'title': 'passcode_history', 'name': 'passcode_history', 'desc': 'The number (1-50) of unique passcodes requires before reuse', 'type': 'text'},
+		{'title': 'max_grace_period', 'name': 'max_grace_period', 'desc': 'Maximum amount of time device can be locked withoutprompting for passcode on unlock', 'type': 'select', 'value': {
+			0: '--',
+			1: 'Immediately',
+			2: '1 Minute',
+			3: '5 Minutes',
+			4: '15 Minutes',
+			5: '1 Hour',
+			6: '4 Hours'
+		}},
+		{'title': 'max_failed_attempt', 'name': 'max_failed_attempt', 'desc': 'Number of passcode entry attempts allowed before all data device will be erased', 'type': 'select', 'value': {
+			0: '--',
+			1: '4',
+			2: '5',
+			3: '6',
+			4: '7',
+			5: '8',
+			6: '9',
+			7: '10'
+		}}
+]},	
+'restrictions': {'title': 'Restrictions', 'name': 'Device Functionality', 'desc': 'Enable use of device features', 'multiple': false, 'type': 'form', 'value': [
+		{'title': 'allow_install_app', 'name': 'allow_install_app', 'desc': '', 'type': 'checkbox', 'value': [0,1]},
+		{'title': 'allow_camera_use', 'name': 'allow_camera_use', 'desc': '', 'type': 'checkbox', 'value': {
+			0: [],
+			1: [{'title': 'allow_facetime', 'name': 'allow_facetime', 'desc': '', 'type': 'checkbox', 'value': [0,1]}]
+		}},
+		{'title': 'allow_screen_capture', 'name': 'allow_screen_capture', 'desc': '', 'type': 'checkbox', 'value': [0,1]},
+		{'title': 'allow_automatic_sync_roaming', 'name': 'allow_automatic_sync_roaming', 'desc': '', 'type': 'checkbox', 'value': [0,1]},
+		{'title': 'allow_siri', 'name': 'allow_siri', 'desc': '', 'type': 'checkbox', 'value': {
+			0: [],
+			1: [{'title': 'allow_siri_device_locked', 'name': 'allow_siri_device_locked', 'desc': '', 'type': 'checkbox', 'value': [0,1]}]
+		}},		
+		{'title': '', 'name': '', 'desc': '', 'type': 'checkbox', 'value': [0,1]},
+		{'title': '', 'name': '', 'desc': '', 'type': 'checkbox', 'value': [0,1]},
+		{'title': '', 'name': '', 'desc': '', 'type': 'checkbox', 'value': [0,1]},
+		{'title': '', 'name': '', 'desc': '', 'type': 'checkbox', 'value': [0,1]},
+		{'title': '', 'name': '', 'desc': '', 'type': 'checkbox', 'value': [0,1]},
+		{'title': '', 'name': '', 'desc': '', 'type': 'checkbox', 'value': [0,1]},
+		{'title': '', 'name': '', 'desc': '', 'type': 'form', 'value': {
+			{'title': 'applications', 'name': 'Applications', 'desc': 'Enable access to applications on the device', 'type': 'checkbox', 'value': [0,1]},
+		}},
+]},	
+'wifi': {'title': 'wifi', 'name': '', 'desc': '', 'multiple': true, 'type': 'form', 'value': [
+		{'title': 'service_set_identifier', 'name': 'service_set_identifier', 'desc': 'Identification of the wireless network to connect to', 'type': 'text', 'value': []},
+		{'title': 'auto_join', 'name': 'auto_join', 'desc': 'Automatically join the target network', 'type': 'checkbox', 'value': [0,1]},
+		{'title': 'hidden_network', 'name': 'hidden_network', 'desc': 'Enable if the target network is open or broadcasting', 'type': 'checkbox', 'value': [0,1]},
+		{'title': 'security_type', 'name': 'security_type', 'desc': 'Wireless network encryption to use when connecting', 'type': 'select', 'value': {
+			0: 'None',
+			1: [{'title': 'wep','name': 'WEP','desc': '','type': 'form','value': [
+					{'title': 'password', 'name': 'password', 'desc': '', 'type': 'password', 'value': []}
+				]
+			}],
+			2: [{'title': 'wpa_wpa2', 'name': 'WPA/ WPA2', 'desc': '', 'type': 'form', 'value': [
+					{'title': 'password', 'name': 'password', 'desc': '', 'type': 'password', 'value': []}
+				]
+			}],
+			3: [{'title': 'any_personal', 'name': 'Any (Personal)', 'desc': '', 'type': 'form', 'value': [
+					{'title': 'password', 'name': 'password', 'desc': '', 'type': 'password', 'value': []}
+				]
+			}],
+			4: [{'title': 'wep_enterprise', 'name': 'WEP Enterprise', 'desc': '', 'type': 'tab', 'value': [
+				{'title': 'protocols', 'name': 'protocols', 'desc': '', 'type': 'form', 'value': [
+						{'title': 'accepted_eap', 'name': 'accepted_eap', 'desc': 'Authentication protocols supported on target network', 'type': 'multi-checkbox', 'value': [				
+							{'title': 'tls', 'name': 'tls', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'leap', 'name': 'leap', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'eap-fast', 'name': 'eap-fast', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'ttls', 'name': 'ttls', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'peap', 'name': 'peap', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'eap_sim', 'name': 'eap_sim', 'desc': '', 'type': 'checkbox', 'value': [0,1]}
+						]},
+						{'title': 'eap-fast', 'name': 'eap-fast', 'desc': 'Configuration of Protected Access Credential (PAC)', 'type': 'multi-checkbox', 'value': [
+							// chained	
+							{'title': 'use_pac', 'name': 'use_pac', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'provision_pac', 'name': 'provision_pac', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'provision_pac_anon', 'name': 'provision_pac_anon', 'desc': '', 'type': 'checkbox', 'value': [0,1]}
+						]}
+				]},
+				{'title': 'authentication', 'name': 'authentication', 'desc': '', 'type': 'form', 'value': [
+						{'title': 'username', 'name': 'username', 'desc': 'Username for connection to wireless network', 'type': 'text', 'value': []},
+						{'title': 'user_per_connection_password', 'name': 'user_per_connection_password', 'desc': 'Request during connection and send with authentication', 'type': 'checkbox', 'value': [0,1]},
+						{'title': 'password', 'name': 'password', 'desc': 'Password for the provided username', 'type': 'password', 'value': []},
+						{'title': 'identity_certificate', 'name': 'identity_certificate', 'desc': 'Credentials for connection to wireless nerwork', 'type': 'select', 'value': [] },// revisit
+						{'title': 'outer_identity', 'name': 'outer_identity', 'desc': 'Externally visible identification (for TTLS, PEAP, and EAP-FAST)', 'type': 'select', 'value': []} // revisit
+				]},
+				{'title': 'trust', 'name': 'trust', 'desc': '', 'type': 'form', 'value': [
+						{'title': 'trusted_certificates', 'name': 'trusted_certificates', 'desc': 'Certificates trusted/ expected for authentication', 'type': 'select',
+							'empty_message': 'No certificate available. Use "Credentials" tab to add', 'value': []},// external data
+						{'title': 'trusted_server_certificate_name', 'name': 'trusted_server_certificate_name', 'desc': 'Certificate names expected from authentication server', 'type': 'select', 'value': []}// external data
+				]}]
+			}],
+			5: [{'title': 'wpa_wpa2_enterprise', 'name': 'WPA/ WPA2 Enterprise', 'desc': '', 'type': 'tab', 'value': [
+					{'title': 'protocols', 'name': 'protocols', 'desc': '', 'type': 'form', 'value': [
+						{'title': 'accepted_eap', 'name': 'accepted_eap', 'desc': 'Authentication protocols supported on target network', 'type': 'multi-checkbox', 'value': [				
+							{'title': 'tls', 'name': 'tls', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'leap', 'name': 'leap', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'eap-fast', 'name': 'eap-fast', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'ttls', 'name': 'ttls', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'peap', 'name': 'peap', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'eap_sim', 'name': 'eap_sim', 'desc': '', 'type': 'checkbox', 'value': [0,1]}
+						]},
+						{'title': 'eap-fast', 'name': 'eap-fast', 'desc': 'Configuration of Protected Access Credential (PAC)', 'type': 'multi-checkbox', 'value': [
+						// chained	
+							{'title': 'use_pac', 'name': 'use_pac', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'provision_pac', 'name': 'provision_pac', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'provision_pac_anon', 'name': 'provision_pac_anon', 'desc': '', 'type': 'checkbox', 'value': [0,1]}
+						]}
+					]},
+					{'title': 'authentication', 'name': 'authentication', 'desc': '', 'type': 'form', 'value': [
+						{'title': 'username', 'name': 'username', 'desc': 'Username for connection to wireless network', 'type': 'text', 'value': []},
+						{'title': 'user_per_connection_password', 'name': 'user_per_connection_password', 'desc': 'Request during connection and send with authentication', 'type': 'checkbox', 'value': [0,1]},
+						{'title': 'password', 'name': 'password', 'desc': 'Password for the provided username', 'type': 'password', 'value': []},
+						{'title': 'identity_certificate', 'name': 'identity_certificate', 'desc': 'Credentials for connection to wireless nerwork', 'type': 'select', 'value': []}, // revisit
+						{'title': 'outer_identity', 'name': 'outer_identity', 'desc': 'Externally visible identification (for TTLS, PEAP, and EAP-FAST)', 'type': 'select', 'value': []} // revisit
+					]},
+					{'title': 'trust', 'name': 'trust', 'desc': '', 'type': 'form', 'value': [
+						{'title': 'trusted_certificates', 'name': 'trusted_certificates', 'desc': 'Certificates trusted/ expected for authentication', 'type': 'select', 'empty_message': 'No certificate available. Use "Credentials" tab to add', 'value': []},// external data
+						{'title': 'trusted_server_certificate_name', 'name': 'trusted_server_certificate_name', 'desc': 'Certificate names expected from authentication server', 'type': 'select', 'value': []}// external data
+					]}]
+			}],
+			6: [{'title': 'any_enterprise', 'name': 'Any (Enterprise)', 'desc': '', 'type': 'tab', 'value': [
+					{'title': 'protocols', 'name': 'protocols', 'desc': '', 'type': 'form', 'value': [
+						{'title': 'accepted_eap', 'name': 'accepted_eap', 'desc': 'Authentication protocols supported on target network', 'type': 'multi-checkbox', 'value': [				
+							{'title': 'tls', 'name': 'tls', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'leap', 'name': 'leap', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'eap-fast', 'name': 'eap-fast', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'ttls', 'name': 'ttls', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'peap', 'name': 'peap', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'eap_sim', 'name': 'eap_sim', 'desc': '', 'type': 'checkbox', 'value': [0,1]}
+						]},
+						{'title': 'eap-fast', 'name': 'eap-fast', 'desc': 'Configuration of Protected Access Credential (PAC)', 'type': 'multi-checkbox', 'value': [
+							// chained	
+							{'title': 'use_pac', 'name': 'use_pac', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'provision_pac', 'name': 'provision_pac', 'desc': '', 'type': 'checkbox', 'value': [0,1]},		
+							{'title': 'provision_pac_anon', 'name': 'provision_pac_anon', 'desc': '', 'type': 'checkbox', 'value': [0,1]}
+						]}
+					]},
+					{'title': 'authentication', 'name': 'authentication', 'desc': '', 'type': 'form', 'value': [
+						{'title': 'username', 'name': 'username', 'desc': 'Username for connection to wireless network', 'type': 'text', 'value': []},
+						{'title': 'user_per_connection_password', 'name': 'user_per_connection_password', 'desc': 'Request during connection and send with authentication', 'type': 'checkbox', 'value': [0,1]},
+						{'title': 'password', 'name': 'password', 'desc': 'Password for the provided username', 'type': 'password', 'value': []},
+						{'title': 'identity_certificate', 'name': 'identity_certificate', 'desc': 'Credentials for connection to wireless nerwork', 'type': 'select', 'value': []}, // revisit
+						{'title': 'outer_identity', 'name': 'outer_identity', 'desc': 'Externally visible identification (for TTLS, PEAP, and EAP-FAST)', 'type': 'select', 'value': []} // revisit
+					]},
+					{'title': 'trust', 'name': 'trust', 'desc': '', 'type': 'form', 'value': [
+						{'title': 'trusted_certificates', 'name': 'trusted_certificates', 'desc': 'Certificates trusted/ expected for authentication', 'type': 'select', 'empty_message': 'No certificate available. Use "Credentials" tab to add', 'value': []},// external data
+						{'title': 'trusted_server_certificate_name', 'name': 'trusted_server_certificate_name', 'desc': 'Certificate names expected from authentication server', 'type': 'select', 'value': []}// external data
+					]}]
+			}]
+		}},
+		{'title': 'proxy', 'name': 'proxy', 'desc': 'Proxy settings for this Wi-Fi connection', 'type': 'select', 'value': [
+			// chained	
+				{'title': 'none', 'name': 'none', 'desc': '', 'type': 'checkbox', 'value': []},		
+				{'title': 'manual', 'name': 'manual', 'desc': '', 'type': 'checkbox', 'value': [
+					{'title': 'proxy', 'name': 'proxy', 'desc': 'Proxy settings for this Wi-Fi connection', 'type': 'form', 'value': [
+						// chained	
+						{'title': 'server_port', 'name': 'server_port', 'desc': 'Fully qualified address and port of the proxy server', 'type': 'multi-text', 'value': []}, // multi-text need revised
+						{'title': 'authentication', 'name': 'authentication', 'desc': 'Username used to connect to the proxy server', 'type': 'text', 'value': []},		
+						{'title': 'password', 'name': 'password', 'desc': '', 'type': 'text', 'value': []}
+					]}
+				]},		
+				{'title': 'automatic', 'name': 'automatic', 'desc': '', 'type': 'checkbox', 'value': [
+					// chained
+					{'title': 'proxy_server_url', 'name': 'proxy_server_url', 'desc': '', 'type': 'text', 'value': []}
+				]}
+		]}
+]},
+'vpn': {'title': 'vpn', 'name': 'VPN', 'desc': '', 'multiple': true, 'type': 'form', 'value': [
+		{'title': 'connection_name', 'name': 'connection_name', 'desc': '', 'type': 'textbox', 'value': []},
+		{'title': 'connection_type', 'name': 'connection_type', 'desc': '', 'type': 'textbox', 'value': [
+			{'title': 'LT2P', 'name': 'lt2p', 'desc': '', 'type': 'textbox', 'value': [
+				{'title': 'server', 'name': 'server', 'desc': '', 'type': 'text', 'value': []},		
+				{'title': 'account', 'name': 'account', 'desc': '', 'type': 'text', 'value': []},		
+				{'title': 'user_authentication', 'name': 'user_authentication', 'desc': '', 'type': 'select', 'value': [
+					{'title': 'password', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []},
+					{'title': 'rsa_secureid', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []}
+				]},		
+				{'title': 'password', 'name': 'password', 'desc': '', 'type': 'password', 'value': []},		
+				{'title': 'shared_secret', 'name': 'shared_secret', 'desc': '', 'type': 'password', 'value': []},		
+				{'title': 'send_all_traffic', 'name': 'send_all_traffic', 'desc': '', 'type': 'checkbox', 'value': []}
+			]},
+			{'title': 'PPTP', 'name': 'pptp', 'desc': '', 'type': 'textbox', 'value': [
+				{'title': 'server', 'name': 'server', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'account', 'name': 'account', 'desc': '', 'type': 'text', 'value': []},		
+				{'title': 'user_authentication', 'name': 'user_authentication', 'desc': '', 'type': 'select', 'value': [
+					{'title': 'password', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []},
+					{'title': 'rsa_secureid', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []}
+				]},		
+				{'title': 'password', 'name': 'password', 'desc': '', 'type': 'password', 'value': []},		
+				{'title': 'encription_level', 'name': 'encription_level', 'desc': '', 'type': 'select', 'value': [
+					{'title': 'none', 'name': 'none', 'desc': '', 'type': 'text', 'value': []},
+					{'title': 'automatic', 'name': 'automatic', 'desc': '', 'type': 'text', 'value': []},
+					{'title': 'maximum_128bit', 'name': 'maximum_128bit', 'desc': '', 'type': 'text', 'value': []}
+				]},		
+				{'title': 'send_all_traffic', 'name': 'send_all_traffic', 'desc': '', 'type': 'checkbox', 'value': []},
+				{'title': 'proxy', 'name': 'proxy', 'desc': '', 'type': 'select', 'value': [
+				// chained	
+					{'title': 'none', 'name': 'none', 'desc': '', 'type': 'checkbox', 'value': []},		
+					{'title': 'manual', 'name': 'manual', 'desc': '', 'type': 'checkbox', 'value': [
+						{'title': 'proxy', 'name': 'proxy', 'desc': 'Proxy settings for this Wi-Fi connection', 'type': 'form', 'value': [
+							// chained	
+								{'title': 'server_port', 'name': 'server_port', 'desc': 'Fully qualified address and port of the proxy server', 'type': 'multi-text', 'value': []}, // multi-text need revised
+								{'title': 'authentication', 'name': 'authentication', 'desc': 'Username used to connect to the proxy server', 'type': 'text', 'value': []},		
+								{'title': 'password', 'name': 'password', 'desc': '', 'type': 'text', 'value': []}
+							]
+						}
+					]},		
+					{'title': 'automatic', 'name': 'automatic', 'desc': '', 'type': 'checkbox', 'value': [
+						// chained
+						{'title': 'proxy_server_url', 'name': 'proxy_server_url', 'desc': '', 'type': 'text', 'value': []}
+					]}
+				]}
+			]},
+			{'title': 'IPSec (Cisco)', 'name': 'ipsec_cisco', 'desc': '', 'type': 'textbox', 'value': [
+				{'title': 'server', 'name': 'server', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'account', 'name': 'account', 'desc': '', 'type': 'text', 'value': []},			
+				{'title': 'password', 'name': 'password', 'desc': '', 'type': 'password', 'value': []},		
+				{'title': 'machine_authentication', 'name': 'machine_authentication', 'desc': '', 'type': 'select', 'value': [
+					{'title': 'certificate', 'name': 'certificate', 'desc': '', 'type': 'text', 'value': []},
+					{'title': 'shared_secret_group_name', 'name': 'shared_secret_group_name', 'desc': '', 'type': 'text', 'value': []}
+				]},	
+				{'title': 'group_name', 'name': 'group_name', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'shared_secret', 'name': 'shared_secret', 'desc': '', 'type': 'password', 'value': []},		
+				{'title': 'use_hybrid_auth', 'name': 'use_hybrid_auth', 'desc': '', 'type': 'checkbox', 'value': []}, // enable if group_name !null
+				{'title': 'prompt_password', 'name': 'prompt_password', 'desc': '', 'type': 'checkbox', 'value': []}, // enable if group_name !null
+				{'title': 'proxy', 'name': 'proxy', 'desc': '', 'type': 'select', 'value': [
+					// chained	
+					{'title': 'none', 'name': 'none', 'desc': '', 'type': 'checkbox', 'value': []},		
+					{'title': 'manual', 'name': 'manual', 'desc': '', 'type': 'checkbox', 'value': [
+						{'title': 'proxy', 'name': 'proxy', 'desc': 'Proxy settings for this Wi-Fi connection', 'type': 'form', 'value': [
+							// chained	
+								{'title': 'server_port', 'name': 'server_port', 'desc': 'Fully qualified address and port of the proxy server', 'type': 'multi-text', 'value': []}, // multi-text need revised
+								{'title': 'authentication', 'name': 'authentication', 'desc': 'Username used to connect to the proxy server', 'type': 'text', 'value': []},		
+								{'title': 'password', 'name': 'password', 'desc': '', 'type': 'text', 'value': []}
+							]
+						}
+					]},		
+					{'title': 'automatic', 'name': 'automatic', 'desc': '', 'type': 'checkbox', 'value': [
+						// chained
+						{'title': 'proxy_server_url', 'name': 'proxy_server_url', 'desc': '', 'type': 'text', 'value': []}
+					]}
+				]}
+			]},
+			{'title': 'Cisco AnyConnect', 'name': 'cisco_anyconnect', 'desc': '', 'type': 'textbox', 'value': [
+				{'title': 'server', 'name': 'server', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'account', 'name': 'account', 'desc': '', 'type': 'text', 'value': []},		
+				{'title': 'group', 'name': 'group', 'desc': '', 'type': 'text', 'value': []},		
+				{'title': 'user_authentication', 'name': 'user_authentication', 'desc': '', 'type': 'select', 'value': [
+					{'title': 'password', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []},
+					{'title': 'rsa_secureid', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []}
+				]},		
+				{'title': 'password', 'name': 'password', 'desc': '', 'type': 'password', 'value': []},		
+				{'title': 'proxy', 'name': 'proxy', 'desc': '', 'type': 'select', 'value': [
+					// chained	
+					{'title': 'none', 'name': 'none', 'desc': '', 'type': 'checkbox', 'value': []},		
+					{'title': 'manual', 'name': 'manual', 'desc': '', 'type': 'checkbox', 'value': [
+						{'title': 'proxy', 'name': 'proxy', 'desc': 'Proxy settings for this Wi-Fi connection', 'type': 'form', 'value': [
+							// chained	
+							{'title': 'server_port', 'name': 'server_port', 'desc': 'Fully qualified address and port of the proxy server', 'type': 'multi-text', 'value': []}, // multi-text need revised
+							{'title': 'authentication', 'name': 'authentication', 'desc': 'Username used to connect to the proxy server', 'type': 'text', 'value': []},		
+							{'title': 'password', 'name': 'password', 'desc': '', 'type': 'text', 'value': []}
+						]}
+					]},		
+					{'title': 'automatic', 'name': 'automatic', 'desc': '', 'type': 'checkbox', 'value': [
+						// chained
+						{'title': 'proxy_server_url', 'name': 'proxy_server_url', 'desc': '', 'type': 'text', 'value': []}
+					]}
+				]}
+			]},
+			{'title': 'Juniper SSL', 'name': 'juniper_ssl', 'desc': '', 'type': 'textbox', 'value': [
+				{'title': 'server', 'name': 'server', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'account', 'name': 'account', 'desc': '', 'type': 'text', 'value': []},		
+				{'title': 'realm', 'name': 'realm', 'desc': '', 'type': 'text', 'value': []},		
+				{'title': 'role', 'name': 'role', 'desc': '', 'type': 'text', 'value': []},		
+				{'title': 'user_authentication', 'name': 'user_authentication', 'desc': '', 'type': 'select', 'value': [
+					{'title': 'password', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []},
+					{'title': 'rsa_secureid', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []}
+				]},		
+				{'title': 'password', 'name': 'password', 'desc': '', 'type': 'password', 'value': []},		
+				{'title': 'proxy', 'name': 'proxy', 'desc': '', 'type': 'select', 'value': [
+				// chained	
+					{'title': 'none', 'name': 'none', 'desc': '', 'type': 'checkbox', 'value': []},		
+					{'title': 'manual', 'name': 'manual', 'desc': '', 'type': 'checkbox', 'value': [
+						{'title': 'proxy', 'name': 'proxy', 'desc': 'Proxy settings for this Wi-Fi connection', 'type': 'form', 'value': [
+							// chained	
+								{'title': 'server_port', 'name': 'server_port', 'desc': 'Fully qualified address and port of the proxy server', 'type': 'multi-text', 'value': []}, // multi-text need revised
+								{'title': 'authentication', 'name': 'authentication', 'desc': 'Username used to connect to the proxy server', 'type': 'text', 'value': []},		
+								{'title': 'password', 'name': 'password', 'desc': '', 'type': 'text', 'value': []}
+							]
+						}
+					]},		
+					{'title': 'automatic', 'name': 'automatic', 'desc': '', 'type': 'checkbox', 'value': [
+						// chained
+						{'title': 'proxy_server_url', 'name': 'proxy_server_url', 'desc': '', 'type': 'text', 'value': []}
+					]}
+				]}
+			]},
+			{'title': 'FS SSL', 'name': 'fs_ssl', 'desc': '', 'type': 'textbox', 'value': [
+				{'title': 'server', 'name': 'server', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'account', 'name': 'account', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'user_authentication', 'name': 'user_authentication', 'desc': '', 'type': 'select', 'value': [
+					{'title': 'password', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []},
+					{'title': 'rsa_secureid', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []}
+				]},		
+				{'title': 'password', 'name': 'password', 'desc': '', 'type': 'password', 'value': []},		
+				{'title': 'proxy', 'name': 'proxy', 'desc': '', 'type': 'select', 'value': [
+				// chained	
+					{'title': 'none', 'name': 'none', 'desc': '', 'type': 'checkbox', 'value': []},		
+					{'title': 'manual', 'name': 'manual', 'desc': '', 'type': 'checkbox', 'value': [
+						{'title': 'proxy', 'name': 'proxy', 'desc': 'Proxy settings for this Wi-Fi connection', 'type': 'form', 'value': [
+							// chained	
+								{'title': 'server_port', 'name': 'server_port', 'desc': 'Fully qualified address and port of the proxy server', 'type': 'multi-text', 'value': []}, // multi-text need revised
+								{'title': 'authentication', 'name': 'authentication', 'desc': 'Username used to connect to the proxy server', 'type': 'text', 'value': []},		
+								{'title': 'password', 'name': 'password', 'desc': '', 'type': 'text', 'value': []}
+							]
+						}
+					]},		
+					{'title': 'automatic', 'name': 'automatic', 'desc': '', 'type': 'checkbox', 'value': [
+						// chained
+						{'title': 'proxy_server_url', 'name': 'proxy_server_url', 'desc': '', 'type': 'text', 'value': []}
+					]}
+				]}
+			]},
+			{'title': 'SonicWALL Mobile Connect', 'name': 'sonicwall_mobile_connect', 'desc': '', 'type': 'textbox', 'value': [
+				{'title': 'server', 'name': 'server', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'account', 'name': 'account', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'login_group_domain', 'name': 'login_group_domain', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'user_authentication', 'name': 'user_authentication', 'desc': '', 'type': 'select', 'value': [
+					{'title': 'password', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []},
+					{'title': 'rsa_secureid', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []}
+				]},		
+				{'title': 'password', 'name': 'password', 'desc': '', 'type': 'password', 'value': []},		
+				{'title': 'proxy', 'name': 'proxy', 'desc': '', 'type': 'select', 'value': [
+				// chained	
+					{'title': 'none', 'name': 'none', 'desc': '', 'type': 'checkbox', 'value': []},		
+					{'title': 'manual', 'name': 'manual', 'desc': '', 'type': 'checkbox', 'value': [
+						{'title': 'proxy', 'name': 'proxy', 'desc': 'Proxy settings for this Wi-Fi connection', 'type': 'form', 'value': [
+							// chained	
+								{'title': 'server_port', 'name': 'server_port', 'desc': 'Fully qualified address and port of the proxy server', 'type': 'multi-text', 'value': []}, // multi-text need revised
+								{'title': 'authentication', 'name': 'authentication', 'desc': 'Username used to connect to the proxy server', 'type': 'text', 'value': []},		
+								{'title': 'password', 'name': 'password', 'desc': '', 'type': 'text', 'value': []}
+							]
+						}
+					]},		
+					{'title': 'automatic', 'name': 'automatic', 'desc': '', 'type': 'checkbox', 'value': [
+						// chained
+						{'title': 'proxy_server_url', 'name': 'proxy_server_url', 'desc': '', 'type': 'text', 'value': []}
+					]}
+				]}
+			]},
+			{'title': 'Aruba VIA', 'name': 'aruba_via', 'desc': '', 'type': 'textbox', 'value': [
+				{'title': 'server', 'name': 'server', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'account', 'name': 'account', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'user_authentication', 'name': 'user_authentication', 'desc': '', 'type': 'select', 'value': [
+					{'title': 'password', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []},
+					{'title': 'rsa_secureid', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []}
+				]},		
+				{'title': 'password', 'name': 'password', 'desc': '', 'type': 'password', 'value': []},		
+				{'title': 'proxy', 'name': 'proxy', 'desc': '', 'type': 'select', 'value': [
+				// chained	
+					{'title': 'none', 'name': 'none', 'desc': '', 'type': 'checkbox', 'value': []},		
+					{'title': 'manual', 'name': 'manual', 'desc': '', 'type': 'checkbox', 'value': [
+						{'title': 'proxy', 'name': 'proxy', 'desc': 'Proxy settings for this Wi-Fi connection', 'type': 'form', 'value': [
+							// chained	
+								{'title': 'server_port', 'name': 'server_port', 'desc': 'Fully qualified address and port of the proxy server', 'type': 'multi-text', 'value': []}, // multi-text need revised
+								{'title': 'authentication', 'name': 'authentication', 'desc': 'Username used to connect to the proxy server', 'type': 'text', 'value': []},		
+								{'title': 'password', 'name': 'password', 'desc': '', 'type': 'text', 'value': []}
+							]
+						}
+					]},		
+					{'title': 'automatic', 'name': 'automatic', 'desc': '', 'type': 'checkbox', 'value': [
+						// chained
+						{'title': 'proxy_server_url', 'name': 'proxy_server_url', 'desc': '', 'type': 'text', 'value': []}
+					]}
+				]}
+			]},
+			{'title': 'Check Point Mobile VPN', 'name': 'check_point_mobile_vpn', 'desc': '', 'type': 'textbox', 'value': [
+				{'title': 'server', 'name': 'server', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'account', 'name': 'account', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'user_authentication', 'name': 'user_authentication', 'desc': '', 'type': 'select', 'value': [
+					{'title': 'password', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []},
+					{'title': 'rsa_secureid', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []}
+				]},		
+				{'title': 'password', 'name': 'password', 'desc': '', 'type': 'password', 'value': []},		
+				{'title': 'proxy', 'name': 'proxy', 'desc': '', 'type': 'select', 'value': [
+				// chained	
+					{'title': 'none', 'name': 'none', 'desc': '', 'type': 'checkbox', 'value': []},		
+					{'title': 'manual', 'name': 'manual', 'desc': '', 'type': 'checkbox', 'value': [
+						{'title': 'proxy', 'name': 'proxy', 'desc': 'Proxy settings for this Wi-Fi connection', 'type': 'form', 'value': [
+							// chained	
+								{'title': 'server_port', 'name': 'server_port', 'desc': 'Fully qualified address and port of the proxy server', 'type': 'multi-text', 'value': []}, // multi-text need revised
+								{'title': 'authentication', 'name': 'authentication', 'desc': 'Username used to connect to the proxy server', 'type': 'text', 'value': []},		
+								{'title': 'password', 'name': 'password', 'desc': '', 'type': 'text', 'value': []}
+							]
+						}
+					]},		
+					{'title': 'automatic', 'name': 'automatic', 'desc': '', 'type': 'checkbox', 'value': [
+						// chained
+						{'title': 'proxy_server_url', 'name': 'proxy_server_url', 'desc': '', 'type': 'text', 'value': []}
+					]}
+				]}
+			]},
+			{'title': 'OpenVPN', 'name': 'openvpn', 'desc': '', 'type': 'textbox', 'value': [
+				{'title': 'server', 'name': 'server', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'account', 'name': 'account', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'user_authentication', 'name': 'user_authentication', 'desc': '', 'type': 'select', 'value': [
+					{'title': 'password', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []},
+					{'title': 'rsa_secureid', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []}
+				]},		
+				{'title': 'password', 'name': 'password', 'desc': '', 'type': 'password', 'value': []},		
+				{'title': 'proxy', 'name': 'proxy', 'desc': '', 'type': 'select', 'value': [
+				// chained	
+					{'title': 'none', 'name': 'none', 'desc': '', 'type': 'checkbox', 'value': []},		
+					{'title': 'manual', 'name': 'manual', 'desc': '', 'type': 'checkbox', 'value': [
+						{'title': 'proxy', 'name': 'proxy', 'desc': 'Proxy settings for this Wi-Fi connection', 'type': 'form', 'value': [
+							// chained	
+								{'title': 'server_port', 'name': 'server_port', 'desc': 'Fully qualified address and port of the proxy server', 'type': 'multi-text', 'value': []}, // multi-text need revised
+								{'title': 'authentication', 'name': 'authentication', 'desc': 'Username used to connect to the proxy server', 'type': 'text', 'value': []},		
+								{'title': 'password', 'name': 'password', 'desc': '', 'type': 'text', 'value': []}
+							]
+						}
+					]},		
+					{'title': 'automatic', 'name': 'automatic', 'desc': '', 'type': 'checkbox', 'value': [
+						// chained
+						{'title': 'proxy_server_url', 'name': 'proxy_server_url', 'desc': '', 'type': 'text', 'value': []}
+					]}
+				]}
+			]},
+			{'title': 'Custom SSL', 'name': 'custom_ssl', 'desc': '', 'type': 'textbox', 'value': [
+				{'title': 'identifier', 'name': 'identifier', 'desc': '', 'type': 'checkbox', 'value': []},		
+				{'title': 'server', 'name': 'server', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'account', 'name': 'account', 'desc': '', 'type': 'text', 'value': []},	
+				{'title': 'custom_data', 'name': 'custom_data', 'desc': '', 'type': 'textarea', 'value': []}, // manual add value (key/value)
+				{'title': 'user_authentication', 'name': 'user_authentication', 'desc': '', 'type': 'select', 'value': [
+					{'title': 'password', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []},
+					{'title': 'rsa_secureid', 'name': 'user_authentication', 'desc': '', 'type': 'radio-group', 'value': []}
+				]},		
+				{'title': 'password', 'name': 'password', 'desc': '', 'type': 'password', 'value': []},		
+				{'title': 'proxy', 'name': 'proxy', 'desc': '', 'type': 'select', 'value': [
+				// chained	
+					{'title': 'none', 'name': 'none', 'desc': '', 'type': 'checkbox', 'value': []},		
+					{'title': 'manual', 'name': 'manual', 'desc': '', 'type': 'checkbox', 'value': [
+						{'title': 'proxy', 'name': 'proxy', 'desc': 'Proxy settings for this Wi-Fi connection', 'type': 'form', 'value': [
+							// chained	
+								{'title': 'server_port', 'name': 'server_port', 'desc': 'Fully qualified address and port of the proxy server', 'type': 'multi-text', 'value': []}, // multi-text need revised
+								{'title': 'authentication', 'name': 'authentication', 'desc': 'Username used to connect to the proxy server', 'type': 'text', 'value': []},		
+								{'title': 'password', 'name': 'password', 'desc': '', 'type': 'text', 'value': []}
+							]
+						}
+					]},		
+					{'title': 'automatic', 'name': 'automatic', 'desc': '', 'type': 'checkbox', 'value': [
+						// chained
+						{'title': 'proxy_server_url', 'name': 'proxy_server_url', 'desc': '', 'type': 'text', 'value': []}
+					]}
+				]}
+			]}
+		]}
+]},
+'mail': {'title': 'Email', 'name': '', 'desc': '', 'multiple': true, 'type': 'form', 'value': [
+	{'title': 'account_desc', 'name': 'account_desc', 'desc': 'The display name of the account (e.g. "Company Mail Account")', 'type': 'text', 'value': []}, // default value = Company Account	
+	{'title': 'account_type', 'name': 'account_type', 'desc': 'The protocol for accessing the email account', 'type': 'select', 'value': [
+		{'title': 'imap', 'name': 'imap', 'desc': '', 'type': 'select', 'value': []},
+		{'title': 'pop', 'name': 'pop', 'desc': '', 'type': 'select', 'value': []},
+	]},
+	{'title': 'user_display_name', 'name': 'user_display_name', 'desc': 'The name of the user', 'type': 'text', 'value': []},
+	{'title': 'email_address', 'name': 'email_address', 'desc': 'The address of the account', 'type': 'text', 'value': []},
+	{'title': 'allow_move', 'name': 'allow_move', 'desc': 'Allow user to move messages from this account', 'type': 'text', 'value': []},
+	{'title': 'incoming_mail', 'name': 'incoming_mail', 'desc': '', 'type': 'tab', 'value': [
+		{'title': 'mail_server_port', 'name': 'mail_server_port', 'desc': 'Hostname or IP address, and port number for incoming email', 'type': 'text', 'value': [
+			{'title': 'port', 'name': 'port', 'desc': '', 'type': 'text', 'value': []}, //default value = 143
+		]},
+		{'title': 'user_name', 'name': 'user_name', 'desc': 'The username used to connect to the server for incoming mail', 'type': 'text', 'value': []},
+		{'title': 'authentication type', 'name': 'authentication type', 'desc': 'The authentication method for the incoming mail server', 'type': 'select', 'value': {
+			0: 'none',
+			1: 'password',
+			2: 'md5_challenge-response',
+			3: 'ntlm',
+			5: 'http_md5_digest'
+		}},
+		{'title': 'password', 'name': 'password', 'desc': 'Password for the incoming mail server', 'type': 'text', 'value': []},
+		{'title': 'use_ssl', 'name': 'use_ssl', 'desc': 'Retrieve incoming mail through secure socket layer', 'type': 'checkbox', 'value': []},
+	]},
+	{'title': 'outgoing_mail', 'name': 'outgoing_mail', 'desc': '', 'type': 'tab', 'value': [
+		{'title': 'mail_server_port', 'name': 'mail_server_port', 'desc': 'Hostname or IP address, and port number for incoming email', 'type': 'text', 'value': [
+			{'title': 'port', 'name': 'port', 'desc': '', 'type': 'text', 'value': []}, //default value = 587
+		]},
+		{'title': 'user_name', 'name': 'user_name', 'desc': 'The username used to connect to the server for incoming mail', 'type': 'text', 'value': []},
+		{'title': 'authentication type', 'name': 'authentication type', 'desc': 'The authentication method for the incoming mail server', 'type': 'select', 'value': {
+			0: 'none',
+			1: 'password',
+			2: 'md5_challenge-response',
+			3: 'ntlm',
+			5: 'http_md5_digest'
+		}},
+		{'title': 'password', 'name': 'password', 'desc': 'SMTP authentication uses the same password as POP/IMAP', 'type': 'text', 'value': [0,1]},
+		{'title': 'outgoing_password_same_incoming', 'name': 'outgoing_password_same_incoming', 'desc': 'Include this account in the recent address syncing', 'type': 'checkbox', 'value': [0,1]},	
+		{'title': 'allow_recent_address_syncing', 'name': 'allow_recent_address_syncing', 'desc': 'Send outgoing mail from this account only from Mail app', 'type': 'checkbox', 'value': [0,1]},	// default 1
+		{'title': 'use_ssl', 'name': 'use_ssl', 'desc': 'Send outgoing mail through secure socket layer', 'type': 'checkbox', 'value': [0,1]},
+		{'title': 'use_s-mime', 'name': 'use_s-mime', 'desc': 'Send outgoing mail using S/MIME encryption', 'type': 'checkbox', 'value': [0,1]}
+	]}
+]},
+'exchange_activesync': {'title': 'Exchange ActiveSync', 'name': '', 'desc': '', 'multiple': true, 'type': 'form', 'value': [
+	{'title': 'account_name', 'name': 'account_name', 'desc': 'Name for the  Exchange ActiveSync account', 'type': 'text', 'value': []},	// default value = Exchange ActiveSync
+	{'title': 'exchange_activesync_host', 'name': 'exchange_activesync_host', 'desc': 'Microsoft Exchange Server', 'type': 'text', 'value': []},	
+	{'title': 'allow_move', 'name': 'allow_move', 'desc': 'Allow user to move messages from this account', 'type': 'checkbox', 'value': [0,1]},	
+	{'title': 'allow_recent_address_syncing', 'name': 'allow_recent_address_syncing', 'desc': 'Include this account in recent address syncing', 'type': 'checkbox', 'value': [0,1]},	
+	{'title': 'use_only_in_mail', 'name': 'use_only_in_mail', 'desc': 'Send outgoing mail from this accoun only from Mail app', 'type': 'checkbox', 'value': [0,1]},	
+	{'title': 'use_ssl', 'name': 'use_ssl', 'desc': 'Send all communication through secure socket layer', 'type': 'checkbox', 'value': [0,1]},	
+	{'title': 'use_s-mime', 'name': 'use_s-mime', 'desc': 'Send outgoing main using S/MIME encryption', 'type': 'checkbox', 'value': [0,1]},	
+	{'title': 'domain', 'name': 'domain', 'desc': 'Domain for the account. Domain and User must be blank for device to prompt for user', 'type': 'text', 'value': []},	
+	{'title': 'user', 'name': 'user', 'desc': 'User for the account. Domain and User must be blank for the device to prompt user', 'type': 'text', 'value': []},	
+	{'title': 'email_address', 'name': 'email_address', 'desc': 'The address of the account', 'type': 'text', 'value': []},	
+	{'title': 'password', 'name': 'password', 'desc': 'The password for the account', 'type': 'password', 'value': []},	
+	{'title': 'past_days_of_mail_sync', 'name': 'past_days_of_mail_sync', 'desc': 'The number of past days of mail to sync', 'type': 'text', 'value': []},	
+	{'title': 'use_ssl', 'name': 'use_ssl', 'desc': 'Send all communication through secure socket layer', 'type': 'checkbox', 'value': [0,1]},	
+	{'title': 'identity_certificate', 'name': 'identity_certificate', 'desc': 'Credentials for connection to ActiveSync', 'type': 'text', 'value': []},	
+	{'title': 'make_identity_certificate_compatible', 'name': 'make_identity_certificate_compatible', 'desc': 'Embed identity certificate in payload for compatibility with iOS 4', 'type': 'checkbox', 'value': [0,1]}	
+]},
+'ldap': {'title': 'LDAP', 'name': '', 'desc': '', 'multiple': true, 'type': 'form', 'value': [
+	{'title': 'account_description', 'name': 'account_description', 'desc': 'The display name of the account (e.g. "Company LDAP Account")', 'type': 'text', 'value': []},	
+	{'title': 'account_username', 'name': 'account_username', 'desc': 'The username for this LDAP account', 'type': 'text', 'value': []},	
+	{'title': 'account_password', 'name': 'account_password', 'desc': 'The password for this LDAP', 'type': 'password', 'value': []},	
+	{'title': 'account_hostname', 'name': 'account_hostname', 'desc': 'The LDAP hostname or IP address', 'type': 'text', 'value': []},	
+	{'title': 'use_ssl', 'name': 'use_ssl', 'desc': 'Enable Secure Socket Layer for this LDAP server', 'type': 'checkbox', 'value': [0,1]},	
+	{'title': 'search_setting', 'name': 'search_setting', 'desc': 'Search settings for this LDAP server', 'type': 'textarea', 'value': []}	// dynamic table. Description/Scope/Search Base
+]},
+'calendar': {'title': 'Calendar', 'name': '', 'desc': '', 'multiple': true, 'type': 'form', 'value': [
+	{'title': 'account_description', 'name': 'account_description', 'desc': 'The display name of the account (e.g. "Company calDAV Account")', 'type': 'text', 'value': []},	// default value = CalDAV Account	
+	{'title': 'account_hostname', 'name': 'account_hostname', 'desc': 'The CalDAV hostname or IP address and port number', 'type': 'text', 'value': [				
+		{'title': 'account_hostname_port', 'name': 'account_hostname_port', 'desc': '', 'type': 'text', 'value': []}	// default 8443
+	]},
+	{'title': 'principal_account', 'name': 'principal_account', 'desc': 'The Principal URL for the CalDAV account', 'type': 'text', 'value': []},		
+	{'title': 'account_username', 'name': 'account_username', 'desc': 'The CalDAV username', 'type': 'text', 'value': []},		
+	{'title': 'account_password', 'name': 'account_password', 'desc': 'The CalDAV password', 'type': 'password', 'value': []},	// dynamic table. Description/Scope/Search Base	
+	{'title': 'use_ssl', 'name': 'use_ssl', 'desc': 'Enable Secure Socket Layer communication with CalDAV server', 'type': 'checkbox', 'value': [0,1]}
+]},
+'subscribed_calendar': {'title': 'Subscribed Calendar', 'name': '', 'desc': '', 'multiple': true, 'type': 'form', 'value': [
+	{'title': 'description', 'name': 'description', 'desc': 'The description of the calendar subscription', 'type': 'text', 'value': []},
+	{'title': 'url', 'name': 'url', 'desc': 'The URL of the calendar file', 'type': 'text', 'value': []},
+	{'title': 'username', 'name': 'username', 'desc': 'The username for this subscription', 'type': 'text', 'value': []},
+	{'title': 'password', 'name': 'password', 'desc': 'The password for this subscription', 'type': 'password', 'value': []},
+	{'title': 'use_ssl', 'name': 'use_ssl', 'desc': '', 'type': 'checkbox', 'value': [0,1]}
+]},
+'contacts': {'title': 'Contacts', 'name': '', 'desc': '', 'multiple': true, 'type': 'form', 'value': [
+	{'title': 'account_description', 'name': 'account_description', 'desc': 'The display name of the account (e.g. "Company CardDAV Account")', 'type': 'text', 'value': []},	// default CardDAV Account	
+	{'title': 'account_hostname', 'name': 'account_hostname', 'desc': 'The CardDAV hostname or IP address and port number', 'type': 'text', 'value': [
+		{'title': 'account_hostname_port', 'name': 'account_hostname_port', 'desc': '', 'type': 'text', 'value': []},	// default 8843
+	]},
+	{'title': 'principal_url', 'name': 'principal_url', 'desc': 'The Principal URL for the CardDAV account', 'type': 'text', 'value': []},		
+	{'title': 'account_username', 'name': 'account_username', 'desc': 'The CardDAV username', 'type': 'text', 'value': []},		
+	{'title': 'account_password', 'name': 'account_password', 'desc': 'The CardDAV password', 'type': 'password', 'value': []},		
+	{'title': 'use_ssl', 'name': 'use_ssl', 'desc': 'Enable Secure Socket Layer communication with CardDAV server', 'type': 'checkbox', 'value': [0,1]}	
+]},
+'web_clips': {'title': 'Web Clips', 'name': '', 'desc': '', 'multiple': true, 'type': 'form', 'value': [
+	{'title': 'label', 'name': 'label', 'desc': 'The name to display for the Web Clip', 'type': 'text', 'value': []},
+	{'title': 'url', 'name': 'url', 'desc': 'The URL to be displayed when selecting the Web Clip', 'type': 'text', 'value': []},
+	{'title': 'removable', 'name': 'removable', 'desc': 'Enable removal of the Web Clip', 'type': 'text', 'value': []},
+	{'title': 'icon', 'name': 'icon', 'desc': 'The icon used for the web clip', 'type': 'file', 'value': []},
+	{'title': 'precomposed_icon', 'name': 'precomposed_icon', 'desc': 'The icon will be displayed with no added visual effects', 'type': 'checkbox', 'value': [0,1]},
+	{'title': 'full_screen', 'name': 'full_screen', 'desc': 'Controls whether the web clip launches as a Full Screen application', 'type': 'checkbox', 'value': [0,1]}
+]},
+'credentials': {'title': 'Credentials', 'name': '', 'desc': '', 'multiple': true, 'type': 'form', 'value': [
+	{'title': 'personal_certificate_store', 'name': 'personal_certificate_store', 'desc': 'Select the certificate(s) you\'d like to use.', 'type': 'form', 'value': [
+		{'title': 'personal_certificate_store', 'name': 'personal_certificate_store', 'desc': '', 'type': 'file', 'value': []}	//browse certificates
+	]},
+	{'title': 'credential_name', 'name': 'credential_name', 'desc': 'Name or description of the credential', 'type': 'text', 'value': []},		
+	{'title': 'certificate_data', 'name': 'certificate_data', 'desc': 'Details of specified certificate', 'type': 'file', 'value': []}	 //certificate viewer	
+]},
+'scep': {'title': 'SCEP', 'name': '', 'desc': '', 'multiple': true, 'type': 'form', 'value': [
+	{'title': 'url', 'name': 'url', 'desc': 'The base URL for the SCEP server', 'type': 'text', 'value': []},
+	{'title': 'name', 'name': 'name', 'desc': 'The name of the instance: CA-IDENT', 'type': 'text', 'value': []},
+	{'title': 'subject', 'name': 'subject', 'desc': 'Representation of an X.500 name (ex. O=Company, CN=Foo', 'type': 'text', 'value': []},
+	{'title': 'subject_alternative_name_type', 'name': 'subject_alternative_name_type', 'desc': 'The type of a subject alternative name', 'type': 'select', 'value': {
+		0: 'None',
+		1: 'RFC 822 Name',
+		2: 'DNS Name',
+		3: 'Uniform Resource Identifier'
+	}},
+	{'title': 'subject_alternative_name_value', 'name': 'subject_alternative_name_value', 'desc': 'The value of a subject alternative name', 'type': 'text', 'value': []},
+	{'title': 'nt_principal_name', 'name': 'nt_principal_name', 'desc': 'An optional principal name for use in the certificate request', 'type': 'text', 'value': []},
+	{'title': 'challenge', 'name': 'challenge', 'desc': 'Used as the pre-shared secret for automatic enrollment', 'type': 'text', 'value': []},
+	{'title': 'retries', 'name': 'retries', 'desc': 'The number of times to retry after PENDING response', 'type': 'text', 'value': []},
+	{'title': 'retry_delay', 'name': 'retry_delay', 'desc': 'The number of seconds to wait between subsequent retries', 'type': 'text', 'value': []},
+	{'title': 'key_size', 'name': 'key_size', 'desc': 'Representation of an X.500 name (ex. O=Company, CN=Foo', 'type': 'select', 'value': {		
+		0: 1024,
+		1: 2048
+	}},
+	{'title': 'use_digital_signature', 'name': 'use_digital_signature', 'desc': '', 'type': 'checkbox', 'value': [0,1]},
+	{'title': 'use_key_encipherment', 'name': 'use_key_encipherment', 'desc': '', 'type': 'checkbox', 'value': [0,1]},
+	{'title': 'fingerprint', 'name': 'fingerprint', 'desc': 'Enter hex string to be used as a fingerprint or use button to create fingerprint from Certificate', 'type': 'file', 'value': []},
+]},
+'mobile_device_management': {'title': 'Mobile Device Management', 'name': '', 'desc': '', 'multiple': true, 'type': 'form', 'value': [
+	{'title': 'server_url', 'name': 'server_url', 'desc': 'The URL of the Mobile Device Management server', 'type': 'text', 'value': []},	
+	{'title': 'check_in_url', 'name': 'check_in_url', 'desc': 'The URL that the device will use to check in during installation', 'type': 'text', 'value': []},	
+	{'title': 'topic', 'name': 'topic', 'desc': 'Push notification Topic for Management messages', 'type': 'text', 'value': []},	
+	{'title': 'identity', 'name': 'identity', 'desc': 'Cryptographic credential used for authentication', 'type': 'select', 'value': []},	// dynamic value
+	{'title': 'sign_messages', 'name': 'sign_messages', 'desc': '', 'type': 'checkbox', 'value': [0,1]},
+	{'title': 'check_out_when_removed', 'name': 'check_out_when_removed', 'desc': 'Notify server when profile is removed from device', 'type': 'checkbox', 'value': [0,1]},	
+	{'title': 'access_rights', 'name': 'access_rights', 'desc': 'Access Rights granted to remote administrators', 'type': 'form', 'value': [			
+		{'title': 'general_settings', 'name': 'general_settings', 'desc': '', 'type': 'group-checkbox', 'value': [0,1]},
+		{'title': 'network_settings', 'name': 'network_settings', 'desc': '', 'type': 'group-checkbox', 'value': [0,1]},
+		{'title': 'security_settings', 'name': 'security_settings', 'desc': '', 'type': 'group-checkbox', 'value': [0,1]},
+		{'title': 'restriction_settings', 'name': 'restriction_settings', 'desc': '', 'type': 'group-checkbox', 'value': [0,1]},
+		{'title': 'configuration_profiles', 'name': 'configuration_profiles', 'desc': '', 'type': 'group-checkbox', 'value': [0,1]},
+		{'title': 'provisioning_profiles', 'name': 'provisioning_profiles', 'desc': '', 'type': 'group-checkbox', 'value': [0,1]},
+		{'title': 'apps', 'name': 'apps', 'desc': '', 'type': 'group-checkbox', 'value': [0,1]}
+	]},
+	{'title': 'add_remove', 'name': 'add_remove', 'desc': '', 'type': 'form', 'value': [
+		{'title': 'settings', 'name': 'settings', 'desc': '', 'type': 'group-checkbox', 'value': [0,1]},
+		{'title': 'configuration_profiles', 'name': 'configuration_profiles', 'desc': '', 'type': 'group-checkbox', 'value': [0,1]},
+		{'title': 'provisioning_profiles', 'name': 'provisioning_profiles', 'desc': '', 'type': 'group-checkbox', 'value': [0,1]},
+		{'title': 'apps', 'name': 'apps', 'desc': '', 'type': 'group-checkbox', 'value': [0,1]}
+	]},
+	{'title': 'security', 'name': 'security', 'desc': '', 'type': 'form', 'value': [
+		{'title': 'change_device_password', 'name': 'change_device_password', 'desc': '', 'type': 'group-checkbox', 'value': [0,1]},
+		{'title': 'remote_wipe', 'name': 'remote_wipe', 'desc': '', 'type': 'group-checkbox', 'value': [0,1]}
+	]},
+	{'title': 'push_notification_service', 'name': 'push_notification_service', 'desc': 'Settings for the Apple Push Notification Service', 'type': 'form', 'value': [			
+		{'title': 'use_development_apns_server', 'name': 'use_development_apns_server', 'desc': '', 'type': 'group-checkbox', 'value': [0,1]},
+	]}
+]},
+'apn': {'title': 'APN', 'name': '', 'desc': '', 'multiple': false, 'type': 'form', 'value': [
+	{'title': 'access_point_name', 'name': 'access_point_name', 'desc': 'The name of the carrier (GPRS) access point', 'type': 'text', 'value': []},	
+	{'title': 'access_point_user_name', 'name': 'access_point_user_name', 'desc': 'The user name to connect to the access point', 'type': 'text', 'value': []},	
+	{'title': 'access_point_password', 'name': 'access_point_password', 'desc': 'The password to connect to the access point', 'type': 'text', 'value': []},
+	{'title': 'proxy_server', 'name': 'proxy_server', 'desc': 'The fully qualified address and port of the proxy server', 'type': 'text', 'value': [				
+		{'title': 'proxy_server_port', 'name': 'proxy_server_port', 'desc': '', 'type': 'text', 'value': []}	// default 8443
+	]}	
+]}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+}
+
+console.log(test)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</script>
+
+</body>
+</html>

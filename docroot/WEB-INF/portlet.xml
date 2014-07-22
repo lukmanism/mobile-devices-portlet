@@ -1,0 +1,181 @@
+<?xml version="1.0"?>
+
+<portlet-app xmlns="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd http://java.sun.com/xml/ns/portlet/portlet-app_2_0.xsd" version="2.0">
+	<portlet>
+		<portlet-name>apps-list</portlet-name>
+		<display-name>Applications List</display-name>
+		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/apps/list/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Applications List</title>
+			<short-title>Applications List</short-title>
+			<keywords></keywords>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>apps-details</portlet-name>
+		<display-name>Applications Details</display-name>
+		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/apps/details/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Applications Details</title>
+			<short-title>Applications Details</short-title>
+			<keywords></keywords>
+		</portlet-info>
+	</portlet>
+
+	<portlet>
+		<portlet-name>devices-list</portlet-name>
+		<display-name>Devices List</display-name>
+		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/devices/list/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Devices List</title>
+			<short-title>Devices List</short-title>
+			<keywords></keywords>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>devices-details</portlet-name>
+		<display-name>Devices Details</display-name>
+		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/devices/details/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Devices Details</title>
+			<short-title>Devices Details</short-title>
+			<keywords></keywords>
+		</portlet-info>
+	</portlet>
+
+	<portlet>
+		<portlet-name>locations-list</portlet-name>
+		<display-name>Locations List</display-name>
+		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/locations/list/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Locations List</title>
+			<short-title>Locations List</short-title>
+			<keywords></keywords>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>locations-details</portlet-name>
+		<display-name>Locations Details</display-name>
+		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/locations/details/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Locations Details</title>
+			<short-title>Locations Details</short-title>
+			<keywords></keywords>
+		</portlet-info>
+	</portlet>
+
+	<portlet>
+		<portlet-name>dashboard-list</portlet-name>
+		<display-name>Dashboard</display-name>
+		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/dashboard/list/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Dashboard</title>
+			<short-title>Dashboard</short-title>
+			<keywords></keywords>
+		</portlet-info>
+	</portlet>
+
+	<portlet>
+		<portlet-name>policies-list</portlet-name>
+		<display-name>Policies List</display-name>
+		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/policies/list/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Policies List</title>
+			<short-title>Policies List</short-title>
+			<keywords></keywords>
+		</portlet-info>
+	</portlet>
+
+	<portlet>
+		<portlet-name>utilities</portlet-name>
+		<display-name>Utilities</display-name>
+		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/utilities/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Utilities</title>
+			<short-title>Utilities</short-title>
+			<keywords></keywords>
+		</portlet-info>
+	</portlet>
+
+</portlet-app>

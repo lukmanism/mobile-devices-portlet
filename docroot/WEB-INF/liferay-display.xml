@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<!DOCTYPE display PUBLIC "-//Liferay//DTD Display 6.2.0//EN" "http://www.liferay.com/dtd/liferay-display_6_2_0.dtd">
+
+<display>
+	<category name="mobile-devices">
+		<portlet id="apps-list"></portlet>
+		<portlet id="apps-details"></portlet>
+		<portlet id="devices-list"></portlet>
+		<portlet id="devices-details"></portlet>
+		<portlet id="locations-list"></portlet>
+		<portlet id="locations-details"></portlet>
+		<portlet id="dashboard-list"></portlet>
+		<portlet id="policies-list"></portlet>
+		<portlet id="utilities"></portlet>
+	</category>
+</display>

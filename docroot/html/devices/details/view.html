@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <link href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
+     
+	<link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.default.min.css" rel="stylesheet" />
+    <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.dataviz.min.css" rel="stylesheet" /> 
+    <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.dataviz.default.min.css" rel="stylesheet" />
+
+    <link href="css/devices_details.css" rel="stylesheet" />
+    <link href="../list/css/devices_list.css" rel="stylesheet" />
+
+    <script src="http://cdn.kendostatic.com/2014.1.528/js/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+    <script src="http://cdn.kendostatic.com/2014.1.528/js/kendo.all.min.js"></script>
+    <script src="../../../js/definition.js"></script>
+    <script src="../../../js/include_devices.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+</head>
+<body>
+
+
+<div id="container">
+
+    <div class="filter">
+        <input type="text" id="search" placeholder="Filter" class="input"/>
+    </div>
+    <div class="compare"></div>
+
+	<div id="details">
+		<ul>
+			<li><a class="asummary" href="#summary">Summary</a></li>
+			<li><a class="alocation" href="#location">Latest Location</a></li>
+			<li><a class="aapps" href="#apps">Installed Apps</a></li>
+			<li><a class="apolicies" href="#policies">Policies</a></li>
+			<li><a class="ageofence" href="#geofence">Geofence Activities</a></li>
+			<li class="ui-tab-dialog-close"></li>
+		</ul>
+		<div>
+		<div id="summary"></div>
+		<div id="location"><span class="sub_tab_title">Device Location</span><div id="location_map"></div></div>
+		<div id="apps"></div>
+		<div id="policies"></div>
+		<div id="geofence"></div>
+		</div>
+	</div>
+</div>
+
+<script>
+    $(document).ready(function() {
+        $.ajax({
+            url: "http://10.1.66.105/wsdevice/list/all/",
+            type: "GET",
+            dataType: "json",
+            crossDomain: true,
+            beforeSend: function(xhr){}
+        }).success(function(response) {
+            var list = getList(response);
+            pushTable(list);
+            console.log(response.data[0]['id'])
+            getMoreDetails(response.data[0]['id'])  
+        }); 
+
+        // Liferay.on('getMoreDetails',function(event) {
+        //     getMoreDetails(event.id.id);
+        // });  
+    });   
+</script>
+</body>
+</html>

@@ -1,0 +1,39 @@
+a, ins, del {
+  text-decoration: none; }
+
+li {
+  list-style: none outside none; }
+
+ol li {
+  list-style: decimal outside none; }
+
+ul li {
+  list-style: square outside none; }
+
+.image-grid {
+  margin: -20px 0 0 -40px;
+  padding-left: 45px;
+  width: 100%; }
+
+.image-grid:after {
+  clear: both;
+  content: "";
+  display: block;
+  height: 0;
+  overflow: hidden; }
+
+.image-grid li {
+  color: #686f74;
+  float: left;
+  font-family: "Helvetica Neue",sans-serif;
+  height: 238px;
+  line-height: 17px;
+  margin: 20px 0 0 35px;
+  overflow: hidden;
+  text-align: center;
+  width: 238px;
+  border: 1px solid #000000; }
+
+.image-grid li img, .image-grid li strong {
+  display: block; }
+

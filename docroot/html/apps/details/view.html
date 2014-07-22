@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+
+    <link href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+	<script src="js/jquery.quicksand.js"></script>
+
+	<script src="../../../js/definition.js"></script>
+	<script src="../../../js/include_apps.js"></script>
+<!-- 
+  <script src="js/jquery.easing.1.3.js"></script>
+
+
+ -->
+</head>
+<body>
+	<div id="filter">
+		<span>Filter by platform:</span>
+		<a href="#android" class="type">Android</a>
+		<a href="#ios" class="type">iOS</a>
+		<a href="#all" class="active type">All</a>
+	</div>
+	<div class="clear"></div>
+	<ul id="applications" class="image-grid"></ul>
+
+
+
+
+
+	<div id="details">
+		<ul>
+			<li><a class="aapp_details" href="#app_details">App Details</a></li>
+			<li><a class="apush_app" href="#push_app">Push App</a></li>
+			<li class="ui-tab-dialog-close"></li>
+		</ul>
+		<div>
+		<div id="app_details"></div>
+		<div id="push_app"></div>
+		</div>
+	</div>
+
+
+<script type="text/javascript">
+
+$(document).ready(function() {
+	$.ajax({
+	    url: "http://10.1.66.105/wsapp/list/all/",
+	    type: "GET",
+	    dataType: "json",
+	    crossDomain: true,
+	    beforeSend: function(xhr){}
+	}).success(function(response) {
+	    var list = getList(response);
+	    $('#applications').html(pushList(list));
+
+		var $filterType   = $('#filter .type');
+		var $applications = $('#applications');
+		var $data         = $applications.clone();
+
+		$filterType.click(function(){
+			var selected = $(this).attr('href').replace('#', '');
+			$filterType.attr('class', '');
+			$(this).attr('class', 'active');
+			if(selected == 'all'){
+				var $filteredData = $data.find('li');
+			} else {
+				var $filteredData = $data.find('li[data-type=' + selected + ']');			
+			}
+			$applications.quicksand($filteredData, {
+				duration: 800,
+			}, function(){
+				pushMoreDetails();
+			});
+			return false;
+		});
+		pushMoreDetails();
+		getMoreDetails(55)
+	});
+});     
+
+
+
+
+
+</script>
+
+
+<style type="text/css" media="screen">
+
+@charset "UTF-8";
+body {
+  font-family: "Helvetica Neue",sans-serif;
+  font-size: 12px;
+}
+.clear {
+  clear: both;
+  float: none;
+  height: 1px;
+  line-height: 1px;
+}
+a, ins, del {
+  text-decoration: none;
+}
+li {
+  list-style: none outside none;
+}
+ol, ul {
+}
+ol li {
+  list-style: decimal outside none;
+}
+ul li {
+  list-style: square outside none;
+}
+.image-grid {
+  margin: 20px auto;
+  width: 80%;
+}
+.image-grid:after {
+  clear: both;
+  content: "";
+  display: block;
+  height: 0;
+  overflow: hidden;
+}
+.image-grid li {
+  color: #686f74;
+  float: left;
+  font-family: "Helvetica Neue",sans-serif;
+  height: auto;
+  line-height: 17px;
+  padding: 20px;
+  overflow: hidden;
+  text-align: center;
+  width: 128px;
+  height: 158px;
+  list-style: none;
+}
+.image-grid li img, .image-grid li strong {
+  display: block;
+  margin: 0 auto;
+}
+.image-grid li img {
+  cursor: pointer;
+}
+.image-grid li strong {
+}
+
+
+#filter {
+	padding: 0px 0px 20px;
+	width: 100%;
+	text-align: right;
+}
+#filter span {
+	margin-right: 6px;
+}
+#filter a {
+	display: inline-block;
+	padding: 0px 2px;
+}
+
+#filter a.active {
+	color: #555555;
+}
+
+
+.ui-widget { 
+	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+	font-size: 14px;
+	line-height: 20px;
+}
+dd, dt {
+	display: table;
+	line-height: 24px;
+	height: 24px;
+}
+dt {
+	float: left;
+	width: 36%;
+	font-weight: normal!important;
+}
+dd {
+	width: 64%;	
+}
+.ui-dialog-title{
+	text-transform: uppercase;
+}
+.ui-dialog-title,
+.sub_tab_title {
+	padding: 10px 0;
+	display: block;
+}
+p.message {
+	border-radius: 2px;
+	padding: 8px 35px 8px 14px;
+	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+	border-radius: 3px 3px 3px 3px;
+	-moz-border-radius: 3px 3px 3px 3px;
+	-webkit-border-radius: 3px 3px 3px 3px;
+	background-color: #cef1fc;
+    border-color: #9ee3f9;
+    color: #12718f;
+}
+#location_map {
+	margin: 20px 0;
+	width: 100%; 
+	height: 300px;
+}
+.ui-dialog {
+	top: 50px!important;
+}
+div.ui-widget-header {
+	border: none;
+}
+ul.ui-widget-header, .ui-widget-header {
+	background: none;
+	border: none;
+	border-bottom: 1px solid #dddddd;
+	color: #222222;
+	font-weight: normal;
+	border-radius: 0px;
+	-moz-border-radius: 0px;
+	-webkit-border-radius: 0px;		
+}
+.ui-state-default a, .ui-state-default a:link, .ui-state-default a:visited, .ui-state-default, .ui-widget-content .ui-state-default, .ui-widget-header .ui-state-default{
+	border-radius: 4px 4px 0px 0px;
+	-moz-border-radius: 4px 4px 0px 0px;
+	-webkit-border-radius: 4px 4px 0px 0px;
+	border: 1px solid #ffffff;
+	background-image: none;
+	background-color: #ffffff;
+	color: #009ae5;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-active {
+	border: 1px solid;
+	border-color: #dddddd #dddddd rgba(0, 0, 0, 0);
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-default {
+	border: 2px solid;
+	border-color: #eeeeee;
+}
+.ui-tabs .ui-tabs-nav li.ui-tabs-active a {
+	color: #555555!important;
+}
+.ui-tabs .ui-tabs-nav li {
+	margin: 0px;
+}
+.ui-tabs .ui-tabs-nav .ui-tabs-anchor {
+	padding: 8px 12px;
+	line-height: 20px;
+}
+.ui-state-default a:link:hover {
+	background-color: #eeeeee;
+}
+.ui-state-default.ui-tabs-active a:link:hover {
+	background-color: #ffffff;
+}
+.ui-state-default.ui-corner-top.ui-state-disabled {
+	display: none;
+}
+#apps table {
+	width: 100%;
+}
+#location_map {
+	border-radius: 4px 4px 4px 4px;
+	-moz-border-radius: 4px 4px 4px 4px;
+	-webkit-border-radius: 4px 4px 4px 4px;
+}
+.ui-widget-content {
+	border: none;
+}
+	
+</style>
+</body>
+</html>
