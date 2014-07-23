@@ -4,14 +4,255 @@
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
 	<title></title>
-	<link rel="stylesheet" href="">
+    <link href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
+     
+	<link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.common.min.css" rel="stylesheet" />
+    <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.default.min.css" rel="stylesheet" />
+    <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.dataviz.min.css" rel="stylesheet" /> 
+    <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.dataviz.default.min.css" rel="stylesheet" />
+
+    <script src="http://cdn.kendostatic.com/2014.1.528/js/jquery.min.js"></script>
+    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+    <script src="http://cdn.kendostatic.com/2014.1.528/js/kendo.all.min.js"></script>
+	<script src="../../../js/definition.js"></script>
+	<script src="../../../js/include_dashboards.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+
 </head>
 <body>
 
 
-<div>
+<div class="container">
+	<div class="locations">
+		<div id="location_map"></div>
+		<div id="chart"></div>
+	</div>
+	<div class="devices">
+		<div class="latest"></div>
+		<div class="inactive"></div>
+		<div class="details"></div>
+		<div class="cta"></div>
+	</div>
+	<div class="apps">
+		<div class="latest"></div>
+		<div class="inactive"></div>
+		<div class="details"></div>
+		<div class="cta"></div>
+	</div>
+	<div class="policies">
+		<div class="latest"></div>
+		<div class="inactive"></div>
+		<div class="details"></div>
+		<div class="cta"></div>
+	</div>
 	
 </div>
+<script type="text/javascript">
+// LOCATIONS
+$(document).ready(function() {
+
+
+	$.ajax({
+	    url: "http://10.1.66.105/wsdevice/list/all/",
+	    type: "GET",
+	    dataType: "json",
+	    crossDomain: true,
+	    beforeSend: function(xhr){}
+	}).success(function(responseList) {
+		var ids = [];
+		$.each(responseList.data, function(k,v){
+			ids.push(v.id)
+		});
+		getDeviceDetails(ids);
+	});
+
+	function getDeviceDetails(ids){
+		var deviceDetails = [];
+		$.each(ids, function(k,v){
+			$.ajax({
+			    url: "http://10.1.66.105/wsdevice/detail/all/"+v,
+			    type: "GET",
+			    dataType: "json",
+			    crossDomain: true,
+			    beforeSend: function(xhr){}
+			}).success(function(responseDetail) {
+				deviceDetails.push(responseDetail)
+			});
+		});
+		setTimeout(function(){
+			formatLocationData(deviceDetails);
+		}, 300);
+	}
+
+	function formatLocationData(data){
+		console.log(data)
+
+		var markers=[], bounds = new google.maps.LatLngBounds();
+		var devices = {
+			device_os_version: [],
+			id: []
+		}
+		$.each(data, function(k,v){
+
+			// device location
+			var lat = +v.device_locate[0]['attributes']['latitude'];
+			var lng = +v.device_locate[0]['attributes']['longitude'];
+			markers.push({lat: lat, lng: lng, title: v.device['attributes']['device_name']});
+			bounds.extend(new google.maps.LatLng(lat, lng));
+
+			// devices
+			// devices.push({
+			// 	id: v.device['attributes']['id'],
+			// 	enrolled_at: v.device['attributes']['enrolled_at'],
+			// 	device_name: v.device['attributes']['device_name'],
+			// 	device_os_version: v.device['attributes']['device_os_version'],
+			// 	platform_id: getDefiniton('platform_id',v.device['attributes']['platform_id']),
+			// 	status: v.device['attributes']['status']
+			// })
+			devices['device_os_version'].push(v.device['attributes']['device_os_version']);
+			devices['id'].push(getDefiniton('id',v.device['attributes']['id']));
+		})
+
+		viewLocation(bounds,markers);
+		// deviceStats(devices);
+		createChart(devices);
+
+	}
+
+
+
+    function createChart(data) {
+		console.log(data['device_os_version'])
+
+		var chartData = new kendo.data.DataSource({
+		    data: [{
+		        "name" : "Approved",
+		        "total" : data.approved.sum()
+		    }, {
+		        "name" : "Filed",
+		        "total" : data.filed.sum()
+		    }, {
+		        "name" : "Reject/KIV",
+		        "total" : data.reject.sum()
+		    }],
+		    schema: {
+		        model: {
+		            fields: {
+						device_os_version: {type: "string"},
+						id: {type: "string"}
+		            }
+		        }
+		    }
+	    });	
+		// console.log(chartData)
+
+		$('#chart').kendoChart({
+			theme: "flat",
+			dataSource: chartData,
+			seriesDefaults: {
+				labels: {
+					visible: false,
+					background: "transparent",
+					template: "#=category#: #=value#",
+					font: "11px Arial"
+				},
+				overlay: {gradient: "none"}
+			},
+			series: [{
+				field: "id",
+				categoryField: "device_os_version",
+				type: "pie"
+			}],
+			chartArea: {
+				background: "transparent"
+			},
+			legend: {
+				visible: true
+			},
+			tooltip: {
+				format: "Total: {0}",
+				visible: false
+			},
+			seriesClick: function(e) {
+				// console.log(e)
+			},
+			labels: {
+				visible: false,
+				background: "transparent",
+				template: "#= category #",
+				font: "14px Arial"
+			}
+		});
+
+       
+    }
+
+
+	function viewLocation(bounds,markers) {
+	    var mapOptions = {
+	        zoom: 16,
+	        center: bounds.getCenter(),
+	        scrollwheel: false,
+	        navigationControl: false,
+	        mapTypeControl: false,
+	        scaleControl: false,
+	        draggable: true,
+	        streetViewControl: false
+	    }
+	    var map = new google.maps.Map(document.getElementById('location_map'), mapOptions);
+	    var marker;
+		$.each(markers, function(k,v){
+		    marker = new google.maps.Marker({
+		        position: new google.maps.LatLng(v.lat, v.lng),
+		        map: map,
+		        title: v.title
+		    });
+		})
+	}
+
+
+
+
+
+//$(document).ready	
+});     
+
+
+// DEVICES
+// APPS
+// POLICIES
 	
+
+</script>
+
+<style type="text/css" media="screen">
+
+/* LOCATIONS */
+.locations {
+}
+.locations #location_map {
+	width: 100%;
+	height: 300px;
+	border-radius: 4px;
+}
+.locations #chart {
+	width: 30%;
+	height: 300px;
+	border-radius: 4px;
+}
+
+/* DEVICES */
+.devices {
+}
+
+/* APPS */
+.apps {
+}
+
+/* POLICIES */
+.policies {
+}
+	
+</style>
 </body>
 </html>
