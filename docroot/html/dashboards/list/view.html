@@ -16,6 +16,7 @@
     <script src="http://cdn.kendostatic.com/2014.1.528/js/kendo.all.min.js"></script>
 	<script src="../../../js/definition.js"></script>
 	<script src="../../../js/include_dashboards.js"></script>
+	<script src="js/psMathStats.min.js"></script>
     <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
 
 </head>
@@ -24,22 +25,26 @@
 
 <div class="container">
 	<div class="locations">
+		<span class="sub_tab_title">Device Location</span>
 		<div id="location_map"></div>
-		<div id="chart"></div>
 	</div>
 	<div class="devices">
+		<span class="sub_tab_title">Device Stats</span>
+		<div id="chartholder"></div>
 		<div class="latest"></div>
 		<div class="inactive"></div>
 		<div class="details"></div>
 		<div class="cta"></div>
 	</div>
 	<div class="apps">
+		<span class="sub_tab_title">App Stats</span>
 		<div class="latest"></div>
 		<div class="inactive"></div>
 		<div class="details"></div>
 		<div class="cta"></div>
 	</div>
 	<div class="policies">
+		<span class="sub_tab_title">Policy Stats</span>
 		<div class="latest"></div>
 		<div class="inactive"></div>
 		<div class="details"></div>
@@ -85,110 +90,225 @@ $(document).ready(function() {
 	}
 
 	function formatLocationData(data){
-		console.log(data)
+		console.log('data',data)
 
-		var markers=[], bounds = new google.maps.LatLngBounds();
-		var devices = {
-			device_os_version: [],
-			id: []
-		}
+		var markers=[], item_count = [], that_array=[], platform = [], bounds = new google.maps.LatLngBounds();
 		$.each(data, function(k,v){
 
 			// device location
 			var lat = +v.device_locate[0]['attributes']['latitude'];
 			var lng = +v.device_locate[0]['attributes']['longitude'];
-			markers.push({lat: lat, lng: lng, title: v.device['attributes']['device_name']});
+			markers.push({
+				lat: lat, 
+				lng: lng, 
+				title: v.device['attributes']['device_name'], 
+				status:v.device['attributes']['status']}
+			);
 			bounds.extend(new google.maps.LatLng(lat, lng));
 
-			// devices
-			// devices.push({
-			// 	id: v.device['attributes']['id'],
-			// 	enrolled_at: v.device['attributes']['enrolled_at'],
-			// 	device_name: v.device['attributes']['device_name'],
-			// 	device_os_version: v.device['attributes']['device_os_version'],
-			// 	platform_id: getDefiniton('platform_id',v.device['attributes']['platform_id']),
-			// 	status: v.device['attributes']['status']
-			// })
-			devices['device_os_version'].push(v.device['attributes']['device_os_version']);
-			devices['id'].push(getDefiniton('id',v.device['attributes']['id']));
-		})
+			// item_count
+			var i=0;
+			$.each(listData.list.stats.platform.list, function(k1,v1){
+				var temp_def = getDefiniton(k1,v.device['attributes'][k1]);
+				k1 = (k1=='device_os_version')? k1+'_'+v.device['attributes']['platform_id']: k1;
+				if(typeof item_count[k1] == 'undefined'){item_count[k1] = []};
+				if(typeof item_count[k1][temp_def] == 'undefined'){item_count[k1][temp_def] = []};
 
+				item_count[k1][temp_def].push(1);
+
+				// status: {
+				// 	active: [1,1,1],
+				// 	inactive: [1]
+				// }
+				// status: {
+				// 	0: {n: active, v: [1,1,1]},
+				// 	1: {n: inactive, v: [1]}
+				// }
+			});
+
+		});
 		viewLocation(bounds,markers);
-		// deviceStats(devices);
-		createChart(devices);
+		createChart(item_count);
+		// console.log(item_count)
 
 	}
 
 
 
-    function createChart(data) {
-		console.log(data['device_os_version'])
+	function createChart(item_count) {
+		var get_stats_set = listData.list.stats.platform.stats_set;
 
-		var chartData = new kendo.data.DataSource({
-		    data: [{
-		        "name" : "Approved",
-		        "total" : data.approved.sum()
-		    }, {
-		        "name" : "Filed",
-		        "total" : data.filed.sum()
-		    }, {
-		        "name" : "Reject/KIV",
-		        "total" : data.reject.sum()
-		    }],
-		    schema: {
-		        model: {
-		            fields: {
-						device_os_version: {type: "string"},
-						id: {type: "string"}
-		            }
-		        }
-		    }
-	    });	
-		// console.log(chartData)
 
-		$('#chart').kendoChart({
-			theme: "flat",
-			dataSource: chartData,
-			seriesDefaults: {
-				labels: {
-					visible: false,
-					background: "transparent",
-					template: "#=category#: #=value#",
-					font: "11px Arial"
-				},
-				overlay: {gradient: "none"}
-			},
-			series: [{
-				field: "id",
-				categoryField: "device_os_version",
-				type: "pie"
-			}],
-			chartArea: {
-				background: "transparent"
-			},
-			legend: {
-				visible: true
-			},
-			tooltip: {
-				format: "Total: {0}",
-				visible: false
-			},
-			seriesClick: function(e) {
-				// console.log(e)
-			},
-			labels: {
-				visible: false,
-				background: "transparent",
-				template: "#= category #",
-				font: "14px Arial"
+		// for (var k in item_count) {
+		// 	if (item_count.hasOwnProperty(k)){
+		// 		var chartdata = item_count[k];
+		// 		var id = k;
+		// 	}
+		// }
+
+		// console.log(get_stats_set)
+
+		for (var k in get_stats_set) {
+			if (get_stats_set.hasOwnProperty(k)){
+
+				console.log(item_count[k]);
+				var chartdata = item_count[k];
+				var id = k;
+				var title = get_stats_set[k]['title'];
+				$('#chartholder').append('<div id="'+k+'" class="charts"/>');
+
+				if(typeof get_stats_set[k]['group'] != 'undefined'){
+
+
+					var format_data = chartDataFormat(chartdata,true);
+					var this_settings = chartSettings(format_data, title, 'column');
+				} else {
+					var format_data = chartDataFormat(chartdata,false);
+					var this_settings = chartSettings(format_data, title, 'pie');
+				}
+
+				$('#'+id).kendoChart(this_settings);
+			}
+		}
+
+
+
+
+
+
+		// console.log(chartdata)
+
+
+		// switch(id){
+		// 	case 'status':
+		// 		var type = 'pie';
+		// 	break;
+		// 	case 'platform_id':
+		// 	case 'device_os_version_1':
+		// 	case 'device_os_version_2':
+		// 		var type = 'column';
+		// 	break;
+		// }
+
+
+	}
+
+	function chartDataFormat(chartdata,group){
+		chartdata.sort();
+		var format_data = [], i=0;
+		for (var k in chartdata) {
+			if (chartdata.hasOwnProperty(k)){
+				var temp_chart = {
+					name: k,
+					total: chartdata[k].sum()
+				}
+				// if(Object.keys(listData.list.stats.platform.color[id]).length > 0){
+				// 	temp_chart['color'] = listData.list.stats.platform.color[id][i]
+				// }
+				format_data.push(temp_chart)
+			}
+			i++;
+		}
+		return chartData = new kendo.data.DataSource({
+			data: format_data,
+			schema: {
+				model: {
+					fields: {
+					}
+				}
 			}
 		});
+	}
 
-       
+	function chartSettings(chartData,title,type){
+		var settings = {
+			chartArea: {background: "transparent"},
+			labels: {visible: false, background: "transparent", template: "#= category #", font: "14px Helvetica"},
+			tooltip: {template: "#=category# = #=value#", visible: true},
+			legend: {visible: true, position: "left", font: "14px Helvetica"},
+			title: {position: "top", text: title, font: "14px Helvetica"},
+			seriesDefaultsPie: { labels: {visible: false, background: "transparent", template: "#=category#: #=value#", font: "11px Arial"}, overlay: {gradient: "none"}},
+			seriesDefaultsColumn: {type: "column", stack: true},
+			theme: "flat",
+			seriesPie: [{field: "total", categoryField: "name", type: type}],
+			seriesColumn: 
+			[{
+                name: "4.4.2",
+                stack: "Android",
+                data: [854622]
+            }, {
+                name: "4.4.2",
+                stack: "Android",
+                data: [490550]
+            }, {
+                name: "4.4.1",
+                stack: "Android",
+                data: [379788]
+            }, {
+                name: "7.01",
+                stack: "iOS",
+                data: [900268]
+            }],
+			categoryAxisColumn: {
+                categories: ['Android vs. iOS'],
+                majorGridLines: {
+                    visible: false
+                }
+            },
+            valueAxisColumn: {
+                labels: {
+                    template: "#= kendo.format('{0:N0}', value / 1000) #"
+                },
+                line: {
+                    visible: false
+                }
+            },
+			// seriesHover: showTooltip,
+			seriesClick: function(e) {
+				// console.log(e)
+			}
+		}
+
+		switch(type){
+			case 'pie':
+				var this_settings = {
+					dataSource: chartData,
+					theme: settings.theme,
+					series: settings.seriesPie,
+					seriesDefaults: settings.seriesDefaultsPie,
+					title: settings.title,
+					chartArea: settings.chartArea,
+					labels: settings.labels,
+					tooltip: settings.tooltip,
+					legend: settings.legend					
+				}
+			break;
+			case 'column':
+				var this_settings = {
+					dataSource: chartData,
+					theme: settings.theme,
+					series: settings.seriesColumn,
+					seriesDefaults: settings.seriesDefaultsColumn,
+					categoryAxis: settings.categoryAxisColumn,
+					title: settings.title,
+					chartArea: settings.chartArea,
+					labels: settings.labels,
+					tooltip: settings.tooltip,
+					legend: settings.legend,				
+					valueAxis: settings.valueAxisColumn,				
+				}
+			break;
+		}
+		return this_settings;
     }
 
+	function showTooltip(e) {
+		console.log(e)
+		$("#chartholder .k-tooltip").html(e.value).show();
+	}
 
 	function viewLocation(bounds,markers) {
+		// console.log(markers)
 	    var mapOptions = {
 	        zoom: 16,
 	        center: bounds.getCenter(),
@@ -201,16 +321,25 @@ $(document).ready(function() {
 	    }
 	    var map = new google.maps.Map(document.getElementById('location_map'), mapOptions);
 	    var marker;
+
+
 		$.each(markers, function(k,v){
 		    marker = new google.maps.Marker({
 		        position: new google.maps.LatLng(v.lat, v.lng),
 		        map: map,
+				icon: pinColor(listData.list.stats.platform.stats_set.status.color[v.status]),
 		        title: v.title
 		    });
 		})
 	}
 
-
+	function pinColor(color){
+		var pinColor = color.replace('#','');
+		return pinImage = new google.maps.MarkerImage("http://chart.apis.google.com/chart?chst=d_map_pin_letter&chld=%E2%80%A2|" + pinColor,
+		new google.maps.Size(21, 34),
+		new google.maps.Point(0,0),
+		new google.maps.Point(10, 34));
+	}
 
 
 
@@ -226,6 +355,19 @@ $(document).ready(function() {
 </script>
 
 <style type="text/css" media="screen">
+/* ALL */
+html, .ui-widget { 
+    font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+    font-size: 14px;
+    line-height: 20px;
+}
+.sub_tab_title {
+	font-weight: bold;
+	display: block;
+	width: 100%;
+	clear: both;
+	padding:10px 0px;
+}
 
 /* LOCATIONS */
 .locations {
@@ -235,14 +377,19 @@ $(document).ready(function() {
 	height: 300px;
 	border-radius: 4px;
 }
-.locations #chart {
-	width: 30%;
-	height: 300px;
-	border-radius: 4px;
-}
 
 /* DEVICES */
 .devices {
+}
+#chartholder {
+	width: 100%;
+	min-height: 300px;
+}
+#chartholder .charts {
+	width: 48%;
+	margin: 10px 0.9%;
+	height: 200px;
+	float: left;
 }
 
 /* APPS */

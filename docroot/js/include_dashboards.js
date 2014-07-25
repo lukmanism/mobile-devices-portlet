@@ -10,7 +10,46 @@ var listData = {
                 },
                 ifEmpty:''
             }
-        }            
+        } ,
+        'stats':{
+            'platform': {
+                name: 'Platform',
+                list: {
+                    // 'id': 'id',
+                    // 'enrolled_at': 'enrolled_at',
+                    // 'device_name': 'Device Name',
+                    'status': 'Status',
+                    'platform_id': 'Platform',
+                    'device_os_version': 'Device OS Ver.'
+                },
+                stats_set: {
+                    'status': {
+                        title: 'Status',
+                        color: ['#F79273','#B6DE8C'],
+                        type: 'pie'
+                    },
+                    'platform_id': {
+                        title: 'Platform',
+                        color: ['#9DA6A5','#D2E44F'],
+                        type: 'column',
+                        group: 'platform'
+                    },
+                    'device_os_version_1': {
+                        title: 'Android Version',
+                        color: ['#B5DE8C','#6DAD8C','#F6B19B','#D888A4'],
+                        type: 'column',
+                        group: 'platform'
+                    },
+                    'device_os_version_2': {
+                        title: 'iOS Version',
+                        color: ['#789078','#A8C090','#D8D890','#D8C078','#A89060'],
+                        type: 'column',
+                        group: 'platform'
+                    }
+                },
+                ifEmpty:''
+            }
+        }           
     }
 }
 
