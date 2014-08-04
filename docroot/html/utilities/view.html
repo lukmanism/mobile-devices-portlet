@@ -2,15 +2,20 @@
 <html>
 <head>
 	<title></title>
-	<link rel="stylesheet" href="css/utilities.css">
+    <link href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
 
+	<link rel="stylesheet" href="css/utilities.css">
 	<script type="text/javascript" src="http://cdn.kendostatic.com/2014.1.528/js/jquery.min.js"></script>
 	<script type="text/javascript" src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 	<script type="text/javascript" src="../../js/definition.js"></script>
 	<script type="text/javascript" src="js/include_utilities.js"></script>
 </head>
+</head>
 <body>
-<div class="container"></div>
+<div class="container">
+	<div id="config"></div>
+</div>
+
 
 
 <script type="text/javascript">
@@ -37,12 +42,16 @@ var enabled_policy = [
 	'mobile_device_management',
 	'apn'
 ]
-
+var style = {
+	tabs: true
+}
+var tab_header = $('<ul/>');
+var form_elements = $('#config')
+var forms = [];
 
 $.each(policy_ios, function(k,v){
 	if($.inArray(v.name, enabled_policy) >= 0){
 		var form = getElem(v.type, v);
-
 		if((Object.keys(v.value).length >= 1)){
 			$.each(v.value, function(k1,v1){
 				form.append(getElem(v1.type, v1))
@@ -69,10 +78,20 @@ $.each(policy_ios, function(k,v){
 				}
 			})
 		}
-		$('.container').append(form);
 	}
+	if(style.tabs == true){
+		form = $('<div/>').attr('class', 'form').attr('id', v.name).append(form);
+		tab_header.append(tabHeader(v));
+	}
+	forms.push(form)
 })
+form_elements.append($('<div class="forms"/>').append(forms));
+form_elements.prepend(tab_header);
+form_elements.tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 
+function tabHeader(val){
+	return $('<li/>').append($('<a/>').html(val.title).attr('href', '#'+val.name))
+}
 
 
 function getElem(type,val){
@@ -90,7 +109,7 @@ function getElem(type,val){
 
 	switch(type){
 		case 'form':
-			form_container.attr('id', val.name);
+			form_container.attr('data-title', val.title).attr('data-name', val.name);
 			if(checkVal(val.title))
 				form_container.append($('<span class="form_title"/>').html(val.title))
 			if(checkVal(val.subtitle))
@@ -123,7 +142,7 @@ function getElem(type,val){
 		case 'checkbox':
 		case 'radio':
 		case 'password':
-	console.log(properties, (val.checked))
+	// console.log(properties, (val.checked))
 			form_row.append(label);
 			form_row.append($('<input '+properties+'/>').attr('type', type).attr('name', val.name).attr('id', val.name).val(val.value));
 
