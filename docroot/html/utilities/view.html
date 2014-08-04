@@ -8,7 +8,7 @@
 	<script type="text/javascript" src="http://cdn.kendostatic.com/2014.1.528/js/jquery.min.js"></script>
 	<script type="text/javascript" src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
 	<script type="text/javascript" src="../../js/definition.js"></script>
-	<script type="text/javascript" src="js/include_utilities.js"></script>
+	<script type="text/javascript" src="../../js/include_utilities.js"></script>
 </head>
 </head>
 <body>
@@ -19,11 +19,6 @@
 
 
 <script type="text/javascript">
-
-
-
-console.log(policy_ios)
-
 var enabled_policy = [
 	'general',
 	'passcode',
@@ -89,192 +84,6 @@ form_elements.append($('<div class="forms"/>').append(forms));
 form_elements.prepend(tab_header);
 form_elements.tabs().addClass( "ui-tabs-vertical ui-helper-clearfix" );
 
-function tabHeader(val){
-	return $('<li/>').append($('<a/>').html(val.title).attr('href', '#'+val.name))
-}
-
-
-function getElem(type,val){
-	var subelem, pushElem, option='', selectVal = [];
-	var form_container = $('<div/>').attr('class', 'form_container');	
-	var form_row = $('<div/>').attr('class', 'form_row');	
-	var form_chain = $('<div/>').attr('class', 'form_chain active');	
-	var form_section = $('<div/>').attr('class', 'form_section');
-	var label = $('<label for="'+val.name+'"/>').html(val.title);
-	var properties = (val.disabled)? 'disabled': '';
-	properties = (val.checked)? properties+' checked': '';
-	properties = (type == 'select-multiple')? properties+' multiple': properties;
-
-
-
-	switch(type){
-		case 'form':
-			form_container.attr('data-title', val.title).attr('data-name', val.name);
-			if(checkVal(val.title))
-				form_container.append($('<span class="form_title"/>').html(val.title))
-			if(checkVal(val.subtitle))
-				form_container.append($('<span class="form_subtitle"/>').html(val.subtitle))
-			if(checkVal(val.desc))
-				form_container.append($('<span class="form_desc"/>').html(val.desc))
-			form_row = form_container; // push to pushElem
-		break;
-
-		case 'section':
-			form_section.attr('id', val.name);
-			if(checkVal(val.title))
-				form_section.append(label)
-			if(checkVal(val.subtitle))
-				form_section.append($('<span class="form_subtitle"/>').html(val.subtitle))
-			if(checkVal(val.desc))
-				form_section.append($('<span class="form_desc"/>').html(val.desc))
-
-			$.each(val.value, function(k,v){
-				form_row.append(getElem(v.type, v))
-			})
-
-			form_section.append(form_row)
-			form_row = form_section; // push to pushElem
-		break;
-
-		case 'text':
-		case 'button':
-		case 'file':
-		case 'checkbox':
-		case 'radio':
-		case 'password':
-	// console.log(properties, (val.checked))
-			form_row.append(label);
-			form_row.append($('<input '+properties+'/>').attr('type', type).attr('name', val.name).attr('id', val.name).val(val.value));
-
-			if(checkVal(val.desc))
-				form_row.append($('<span class="form_desc"/>').html(val.desc))
-		break;
-
-		case 'textarea':
-			form_row.append(label);
-			form_row.append($('<textarea '+properties+'/>').attr('type', type).attr('name', val.name));
-			if(checkVal(val.desc))
-				form_row.append($('<span class="form_desc"/>').html(val.desc))
-		break;
-
-		case 'select':
-		case 'select-multiple':
-			form_row.append(label);
-			$.each(val.value, function(k,v){
-				if(typeof v != 'object'){
-					option += '<option value="'+k+'">'+v+'</option>'
-				} else {
-					if(typeof v.title != 'undefined'){
-						option += '<option value="'+k+'">'+v.title+'</option>'
-					}
-				}
-			})
-			form_row.append($('<select '+properties+'/>').attr('name', val.name).attr('id', val.name).append(option));
-
-			if(checkVal(val.desc))
-				form_row.append($('<span class="form_desc"/>').html(val.desc))
-		break;
-
-		case 'chain-checkbox':
-			form_chain.attr('id', 'chain_'+val.name)
-			form_row.append(label);
-			form_row.append($('<input/>').attr('type', 'checkbox').attr('name', val.name).attr('id', val.name).bind('click', function(){
-				if ($(this).is(':checked')) {
-					$.each(selectVal[val.name], function(k,v){
-						$('#'+v.name).removeAttr("disabled");
-					})
-				} else {
-					form_chain.html('')
-					$.each(selectVal[val.name], function(k,v){
-						form_chain.append(getElem(v.type, v))
-					})
-				}
-			}));
-			selectVal[val.name] = val.chain_value;
-
-			$.each(val.chain_value, function(k,v){
-				form_chain.append(getElem(v.type, v))
-			})
-
-			if(checkVal(val.desc))
-				form_row.append($('<span class="form_desc"/>').html(val.desc))
-
-			form_row.append(form_chain)
-		break;
-
-		case 'chain-text':
-			form_chain.attr('id', 'chain_'+val.name)
-			form_row.append(label);
-			form_row.append($('<input/>').attr('type', 'text').attr('name', val.name).attr('id', val.name).bind('blur', function(){
-				if ($(this).val() != '') {
-					$.each(selectVal[val.name], function(k,v){
-						$('#'+v.name).removeAttr("disabled");
-					})
-				} else {
-					form_chain.html('')
-					$.each(selectVal[val.name], function(k,v){
-						form_chain.append(getElem(v.type, v))
-					})
-				}
-			}));
-			selectVal[val.name] = val.chain_value;
-
-			$.each(val.chain_value, function(k,v){
-				form_chain.append(getElem(v.type, v))
-			})
-
-			if(checkVal(val.desc))
-				form_row.append($('<span class="form_desc"/>').html(val.desc))
-
-			form_row.append(form_chain)
-		break;
-
-		case 'chain-select':
-			form_row.append(label)
-
-			$.each(val.value, function(k,v){
-				if(typeof v != 'object'){
-					option += '<option value="'+k+'">'+v+'</option>'
-				} else {
-					if(typeof v.title != 'undefined'){
-						option += '<option value="'+k+'">'+v.title+'</option>'
-					} 
-				}
-			})
-
-			form_row.append($('<select/>').attr('name', val.name).attr('id', val.name).append(option).bind("change", function() {
-				var selected = $('option:selected', this)[0]['value'];
-				form_chain.html('')
-				$.each(selectVal[val.name][selected], function(k1,v1){
-					form_chain.append(getElem(v1.type, v1))
-				})
-			}));
-
-			if(checkVal(val.desc))
-				form_row.append($('<span class="form_desc"/>').html(val.desc))
-
-			$.each(val.chain_value, function(k,v){
-				selectVal[val.name] = v.value;
-				form_row.append(form_section.append(getElem(v.type, v)))
-				$.each(v.value[0], function(k1,v1){
-					form_chain.append(getElem(v1.type, v1))
-				})
-				// if(form_chain[0]['textContent'] != '')
-				form_row.append(form_chain)
-			})
-		break;
-	}
-	pushElem = form_row;
-	return  pushElem;
-}
-
-function checkVal(val){
-	if(val != '' && typeof val != 'undefined'){
-		return true;
-	} else {		
-		return false;
-	}
-}
 </script>
 
 </body>

@@ -78,7 +78,10 @@
 		<portlet-name>utilities</portlet-name>
 		<icon>/icon.png</icon>
 		<header-portlet-css>/css/base_style.css</header-portlet-css>
+		<header-portlet-css>http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css</header-portlet-css>
 		<footer-portlet-javascript>/js/definition.js</footer-portlet-javascript>
+		<footer-portlet-javascript>/js/include_utilities.js</footer-portlet-javascript>
+		<footer-portlet-javascript>http://code.jquery.com/ui/1.11.0/jquery-ui.js</footer-portlet-javascript>
 		<css-class-wrapper>utilities-portlet</css-class-wrapper>
 	</portlet>
 
