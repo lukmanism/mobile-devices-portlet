@@ -107,7 +107,7 @@ var policy_ios = [
 							]}
 						],
 						[// Australia
-							{title: 'movies', name: 'movies', desc: '', type: 'select', value: [ 
+							{title: 'Movies', name: 'movies', desc: '', type: 'select', value: [ 
 								'Dont\'t Allow Movies',  'G',  'PG',  'M',  'MA15+',  'R18+',  'Allow All Movies'
 							]},
 							{title: 'TV Shows', name: 'tv_shows', desc: '', type: 'select', value: [
@@ -118,7 +118,7 @@ var policy_ios = [
 							]}
 						],
 						[// Canada
-							{title: 'movies', name: 'movies', desc: '', type: 'select', value: [
+							{title: 'Movies', name: 'movies', desc: '', type: 'select', value: [
 								'Dont\'t Allow Movies', 'G', 'PG', '14A', '18A', 'R', 'Allow All Movies'
 							]},
 							{title: 'TV Shows', name: 'tv_shows', desc: '', type: 'select', value: [
@@ -129,7 +129,7 @@ var policy_ios = [
 							]}
 						],
 						[// Germany
-							{title: 'movies', name: 'movies', desc: '', type: 'select', value: [
+							{title: 'Movies', name: 'movies', desc: '', type: 'select', value: [
 								'Dont\'t Allow Movies', 'ab 0 Jahren', 'ab 6 Jahren', 'ab 12 Jahren', 'ab 16 Jahren', 'ab 18 Jahren', 'Allow All Movies'
 							]},
 							{title: 'TV Shows', name: 'tv_shows', desc: '', type: 'select', value: [
@@ -140,7 +140,7 @@ var policy_ios = [
 							]}
 						],
 						[// France
-							{title: 'movies', name: 'movies', desc: '', type: 'select', value: [
+							{title: 'Movies', name: 'movies', desc: '', type: 'select', value: [
 								'Dont\'t Allow Movies', '-10', '-12', '-16', '-18', 'Allow All Movies'
 							]},
 							{title: 'TV Shows', name: 'tv_shows', desc: '', type: 'select', value: [
@@ -151,7 +151,7 @@ var policy_ios = [
 							]}
 						],
 						[// Ireland
-							{title: 'movies', name: 'movies', desc: '', type: 'select', value: [
+							{title: 'Movies', name: 'movies', desc: '', type: 'select', value: [
 								'Dont\'t Allow Movies',  'G',  'PG',  '12',  '15',  '16',  '18',  'Allow All Movies'
 							]},
 							{title: 'TV Shows', name: 'tv_shows', desc: '', type: 'select', value: [
@@ -162,7 +162,7 @@ var policy_ios = [
 							]}
 						],
 						[// Japan
-							{title: 'movies', name: 'movies', desc: '', type: 'select', value: [
+							{title: 'Movies', name: 'movies', desc: '', type: 'select', value: [
 								'Dont\'t Allow Movies', 'G', 'PG-12', 'R-15', 'R-18', 'Allow All Movies'
 							]},
 							{title: 'TV Shows', name: 'tv_shows', desc: '', type: 'select', value: [
@@ -173,7 +173,7 @@ var policy_ios = [
 							]}
 						],
 						[// New Zealand
-							{title: 'movies', name: 'movies', desc: '', type: 'select', value: [
+							{title: 'Movies', name: 'movies', desc: '', type: 'select', value: [
 								'Dont\'t Allow Movies', 'G', 'PG', 'M', 'R13', 'R15', 'R16', 'R18', 'R', 'RP16', 'Allow All Movies'
 							]},
 							{title: 'TV Shows', name: 'tv_shows', desc: '', type: 'select', value: [
@@ -184,7 +184,7 @@ var policy_ios = [
 							]}
 						],
 						[// United Kingdom
-							{title: 'movies', name: 'movies', desc: '', type: 'select', value: 
+							{title: 'Movies', name: 'movies', desc: '', type: 'select', value: 
 								['Dont\'t Allow Movies', 'U', 'Uc', 'PG', '12', '12A', '15', '18', 'Allow All Movies']
 							},
 							{title: 'TV Shows', name: 'tv_shows', desc: '', type: 'select', value: [
@@ -825,7 +825,7 @@ var policy_ios = [
 		{title: 'Proxy Server', name: 'proxy_server', desc: '', type: 'text', value: []},
 		{title: 'Proxy Server Port', name: 'proxy_server_port', desc: 'The fully qualified address and port of the proxy server', type: 'text', value: 0}	// default 8443
 	]}
-]
+];
 
 
 
@@ -841,10 +841,9 @@ function getElem(type,val){
 	var form_chain = $('<div/>').attr('class', 'form_chain active');	
 	var form_section = $('<div/>').attr('class', 'form_section');
 	var label = $('<label for="'+val.name+'"/>').html(val.title);
-	var properties = (val.disabled)? 'disabled': '';
-	properties = (val.checked)? properties+' checked': '';
+	var properties = (val.disabled === true)? 'disabled': '';
+	properties = (val.checked === true)? properties+' checked': properties;
 	properties = (type == 'select-multiple')? properties+' multiple': properties;
-
 
 
 	switch(type){

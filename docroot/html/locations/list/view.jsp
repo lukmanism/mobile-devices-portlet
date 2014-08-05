@@ -3,7 +3,7 @@
 
 <link href="<%=request.getContextPath()%>/html/locations/list/css/locations_list.css" rel="stylesheet" />
 
-<div id="container">
+<div class="portlet_container">
     <div class="filter">
         <input type="text" id="search" placeholder="Filter" class="input"/>
     </div>

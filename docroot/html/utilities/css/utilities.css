@@ -66,13 +66,14 @@ ul.ui-widget-header, .ui-widget-header {
 .ui-tabs .ui-tabs-nav .ui-tabs-anchor {
 	padding: 8px 12px;
 	line-height: 20px;
-	width: 90%;
+	width: 100%;
 }
-.ui-state-default a:link:hover {
-	background-color: #eeeeee;
+.ui-state-default.ui-state-hover  a {
+	background-color: #eeeeee!important;
+	background-image: none!important;
 }
 .ui-state-default.ui-tabs-active a:link:hover {
-	background-color: #ffffff;
+	background-color: #ffffff!important;
 }
 .ui-state-default.ui-corner-top.ui-state-disabled {
 	display: none;
@@ -97,7 +98,7 @@ ul.ui-widget-header, .ui-widget-header {
 	margin-top: 10px;
 }
 .form_desc {
-	color: #C0C0C0;
+	color: #777;
 	font-size: 11px;
 	line-height: 12px;
 }
