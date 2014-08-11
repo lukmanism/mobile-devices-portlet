@@ -25,6 +25,11 @@
 a, ins, del {
   text-decoration: none;
 }
+#applications {
+  margin: 0px!important;
+  margin: 0px auto!important;
+  width: 99%;
+}
 #applications li {
   list-style: none outside none;
   border: 1px solid transparent;
@@ -63,9 +68,10 @@ a, ins, del {
   padding: 10px;
   overflow: hidden;
   text-align: center;
-  width: 128px;
   height: 168px;
   list-style: none;
+  width: 25%!important;
+  min-width: 128px;
 }
 .image-grid li span{
   overflow: hidden;

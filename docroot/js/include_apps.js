@@ -1,89 +1,3 @@
-// user-defined attribute
-var listData = {
-    'list': {
-        'apps':{
-            'app_list':{
-                name: 'Applications',
-                list: {
-                    'alias': 'App Name',
-                    // 'api_key': 'Api Key',
-                    // 'app_bugs_fixes': 'Bug Fixes',
-                    // 'app_category_id': 'Category',
-                    // 'app_detail': 'Details',
-                    // 'app_device_type': 'Device Type',
-                    // 'app_identifier': 'Identifier',
-                    // 'app_lang_support': 'Language Support',
-                    // 'app_name': 'App Name',
-                    // 'app_path': 'Path',
-                    // 'app_promo': 'Promo',
-                    // 'app_publish_date': 'Publish Date',
-                    // 'app_publisher': 'Publisher',
-                    // 'app_rate': 'Rating',
-                    // 'app_status': 'Status',
-                    // 'app_type_id': 'Type',
-                    // 'app_version_code': 'Version Code',
-                    // 'app_version_name': 'Version Name',
-                    // 'app_whats_new': 'What\'s New',
-                    // 'asset_filename': 'File Name',
-                    // 'asset_id': 'asset_id',
-                    // 'asset_path': 'Asset Path',
-                    'byte_size': 'File Size',
-                    // 'category_desc': 'Description',
-                    // 'content_rating_id': 'content_rating_id',
-                    // 'created_at': 'Created',
-                    'id': 'ID',
-                    // 'min_os_sdk_version': 'Min. OS Version',
-                    // 'organization_id': 'Organization',
-                    'platform': 'Platform',
-                    // 'type': 'Type',
-                    // 'updated_at': 'Updated'
-                }
-            }
-        }         
-    },
-    'details': {
-        'apps':{
-            'app_details':{
-                name: 'Applications',
-                list: {
-                    'alias': 'App Name',
-                    // 'api_key': 'Api Key',
-                    // 'app_bugs_fixes': 'Bug Fixes',
-                    'app_category_id': 'Category',
-                    'app_detail': 'Details',
-                    'app_device_type': 'Device Type',
-                    // 'app_identifier': 'Identifier',
-                    'app_lang_support': 'Language Support',
-                    // 'app_name': 'App Name',
-                    'app_path': 'Path', // download path
-                    // 'app_promo': 'Promo',
-                    'app_publish_date': 'Publish Date',
-                    'app_publisher': 'Publisher',
-                    // 'app_rate': 'Rating',
-                    'app_status': 'Status',
-                    // 'app_type_id': 'Type',
-                    'app_version_code': 'Version',
-                    // 'app_version_name': 'Version Name',
-                    // 'app_whats_new': 'What\'s New',
-                    // 'asset_filename': 'File Name',
-                    // 'asset_id': 'asset_id',
-                    // 'asset_path': 'Asset Path',
-                    'byte_size': 'File Size',
-                    // 'category_desc': 'Description',
-                    // 'content_rating_id': 'content_rating_id',
-                    // 'created_at': 'Created',
-                    'id': 'ID',
-                    'min_os_sdk_version': 'Min. OS Version',
-                    'organization_id': 'Organization',
-                    'platform': 'Platform',
-                    // 'type': 'Type',
-                    // 'updated_at': 'Updated'
-                }
-            }
-        }         
-    }
-}
-
 function getList(data){
     var td = [];
     $.each(data.data, function(k,v){
@@ -186,11 +100,11 @@ function viewDetails(data, setlist, type){
                 var download_url = '';
                 template +='<dl>'
                     $.each(v.list, function(k2,v2){
-                        attr = (typeof data[0] != 'undefined')? data[0]['attributes'][k2]: data['attributes'][k2];
+                        attr = (typeof data[0] != 'undefined')? data[0][k2]: data[k2];
                         attr = (typeof getDefiniton(k2,attr) != 'undefined')? getDefiniton(k2,attr): attr;
-                        attr = (k2 == 'byte_size')? bytesToSize(data['attributes'][k2]): attr;
+                        attr = (k2 == 'byte_size')? bytesToSize(data[k2]): attr;
                         if(k2 == 'app_path'){
-                            download_url ='<div class="download"><a href="'+data['attributes'][k2]+'">Download App</a></div>'
+                            download_url ='<div class="download"><a href="'+data[k2]+'">Download App</a></div>'
                         } else {
                             template +='<dt>'+v2+'</dt><dd>'+attr+'</dd>'                            
                         }
@@ -208,9 +122,9 @@ function viewDetails(data, setlist, type){
                 $.each(data, function(k3,v3){                       
                     template +='<tr>'
                     $.each(v.list, function(k2,v2){
-                        // if(typeof v3['attributes'] != 'undefined'){
-                        // console.log(v3['attributes'])
-                        //     template +='<td>'+v3['attributes'][k2]+'</td>'
+                        // if(typeof v3 != 'undefined'){
+                        // console.log(v3)
+                        //     template +='<td>'+v3[k2]+'</td>'
                         // } else {
                             template +='<td>'+data[k2]+'</td>'
                         // }
@@ -224,4 +138,89 @@ function viewDetails(data, setlist, type){
         }
     });
     return template;
+}
+// user-defined attribute
+var listData = {
+    'list': {
+        'apps':{
+            'app_list':{
+                name: 'Applications',
+                list: {
+                    'alias': 'App Name',
+                    // 'api_key': 'Api Key',
+                    // 'app_bugs_fixes': 'Bug Fixes',
+                    // 'app_category_id': 'Category',
+                    // 'app_detail': 'Details',
+                    // 'app_device_type': 'Device Type',
+                    // 'app_identifier': 'Identifier',
+                    // 'app_lang_support': 'Language Support',
+                    // 'app_name': 'App Name',
+                    // 'app_path': 'Path',
+                    // 'app_promo': 'Promo',
+                    // 'app_publish_date': 'Publish Date',
+                    // 'app_publisher': 'Publisher',
+                    // 'app_rate': 'Rating',
+                    // 'app_status': 'Status',
+                    // 'app_type_id': 'Type',
+                    // 'app_version_code': 'Version Code',
+                    // 'app_version_name': 'Version Name',
+                    // 'app_whats_new': 'What\'s New',
+                    // 'asset_filename': 'File Name',
+                    // 'asset_id': 'asset_id',
+                    // 'asset_path': 'Asset Path',
+                    'byte_size': 'File Size',
+                    // 'category_desc': 'Description',
+                    // 'content_rating_id': 'content_rating_id',
+                    // 'created_at': 'Created',
+                    'id': 'ID',
+                    // 'min_os_sdk_version': 'Min. OS Version',
+                    // 'organization_id': 'Organization',
+                    'platform': 'Platform',
+                    // 'type': 'Type',
+                    // 'updated_at': 'Updated'
+                }
+            }
+        }         
+    },
+    'details': {
+        'apps':{
+            'app_details':{
+                name: 'Applications',
+                list: {
+                    'alias': 'App Name',
+                    // 'api_key': 'Api Key',
+                    // 'app_bugs_fixes': 'Bug Fixes',
+                    'app_category_id': 'Category',
+                    'app_detail': 'Details',
+                    'app_device_type': 'Device Type',
+                    // 'app_identifier': 'Identifier',
+                    'app_lang_support': 'Language Support',
+                    // 'app_name': 'App Name',
+                    'app_path': 'Path', // download path
+                    // 'app_promo': 'Promo',
+                    'app_publish_date': 'Publish Date',
+                    'app_publisher': 'Publisher',
+                    // 'app_rate': 'Rating',
+                    'app_status': 'Status',
+                    // 'app_type_id': 'Type',
+                    'app_version_code': 'Version',
+                    // 'app_version_name': 'Version Name',
+                    // 'app_whats_new': 'What\'s New',
+                    // 'asset_filename': 'File Name',
+                    // 'asset_id': 'asset_id',
+                    // 'asset_path': 'Asset Path',
+                    'byte_size': 'File Size',
+                    // 'category_desc': 'Description',
+                    // 'content_rating_id': 'content_rating_id',
+                    // 'created_at': 'Created',
+                    'id': 'ID',
+                    'min_os_sdk_version': 'Min. OS Version',
+                    'organization_id': 'Organization',
+                    'platform': 'Platform',
+                    // 'type': 'Type',
+                    // 'updated_at': 'Updated'
+                }
+            }
+        }         
+    }
 }

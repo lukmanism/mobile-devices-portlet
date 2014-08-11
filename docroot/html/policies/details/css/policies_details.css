@@ -104,3 +104,55 @@ ul.ui-widget-header, .ui-widget-header {
 .ui-widget-content {
 	border: none;
 }
+
+
+/*-----------------------Add/Edit/Delete----------*/
+a.green{
+	background-color: #A2DF53;
+	color: #fff;
+}
+a.yellow{
+	background-color: #FFB74F;
+	color: #fff;
+}
+a.red{
+	background-color: #FF7663;
+	color: #fff;
+}
+
+.tools, .form_actions {
+	padding: 0px 0px 20px;
+	width: 100%;
+	text-align: right;
+}
+.tools ul, .form_actions ul {
+	margin: 0px;
+	padding: 0px;
+}
+.tools ul li, .form_actions li {
+	list-style-type: none;
+	display: inline-block;
+}
+.tools li a, .form_actions li a {
+	display: block;
+	text-align: center;
+	margin: 0px 0px 0px 4px;
+	padding: 8px 12px;
+	border-radius: 4px;
+	color: #009ae5;
+	border: 1px solid #dddddd;
+	text-decoration: none;
+}
+.form_actions li a {
+	color: #fff;
+	border: none;
+}
+.tools li a:hover , .form_actions li a:hover {
+	background-color: #eeeeee;
+	border: 1px solid #ffffff;
+	text-decoration: none!important;
+}
+.form_actions li a:hover {
+	color: #808080;
+	border: none;
+}

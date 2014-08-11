@@ -2,354 +2,83 @@
 <html>
 <head>
     <title></title>
+    <link href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
      
 	<link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.common.min.css" rel="stylesheet" />
     <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.default.min.css" rel="stylesheet" />
     <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.dataviz.min.css" rel="stylesheet" /> 
     <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.dataviz.default.min.css" rel="stylesheet" />
-    <link href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
-    <link href="css/device.css" rel="stylesheet" />
+
+    <link href="css/policies_list.css" rel="stylesheet" />
+    <link href="../details/css/policies_details.css" rel="stylesheet" />
 
     <script src="http://cdn.kendostatic.com/2014.1.528/js/jquery.min.js"></script>
     <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
     <script src="http://cdn.kendostatic.com/2014.1.528/js/kendo.all.min.js"></script>
-    <script src="js/definition.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+    <script src="../../../js/definition.js"></script>
+    <script src="../../../js/include_policies.js"></script>
 </head>
 <body>
 
+<div class="portlet_container">
+    <div class="filter">
+        <input type="text" id="search" placeholder="Filter" class="input"/>
+    </div>
+    <div class="compare"></div>
 
-	<div id="container">
-		<div class="filter">
-			<input type="text" id="search" placeholder="Filter" class="input"/>
+<!--     <div class="tools">
+		<ul>
+			<li><a class="form_tool" data-action="add" href="#">Add</a></li>
+			<li><a class="form_tool" data-action="edit" href="#">Edit</a></li>
+			<li><a class="form_tool" data-action="impose" href="#">Impose Policy</a></li>
+		</ul>
+    </div> -->
+
+	<div id="details">
+		<ul>
+			<li><a class="ageneral" href="#general">General</a></li>
+			<li><a class="apasscode" href="#passcode">Passcode</a></li>
+			<li><a class="awifi" href="#wifi">WiFi</a></li>
+			<li><a class="alocation" href="#location">Location</a></li>
+			<li><a class="anetwork" href="#network">Network</a></li>
+			<li><a class="aapps" href="#apps">Apps</a></li>
+			<li><a class="aothers" href="#others">Others</a></li>
+			<li class="ui-tab-dialog-close"></li>
+		</ul>
+		<div>
+    		<div id="general"></div>
+    		<div id="passcode"></div>
+    		<div id="wifi"></div>
+    		<div id="location"></div>
+    		<div id="network"></div>
+    		<div id="apps"></div>
+    		<div id="others"></div>
 		</div>
-		<div class="compare"></div>
-		<div id="details" style="display: none;">
+
+<!-- 	    <div class="form_actions">
 			<ul>
-				<li><a class="ageneral" href="#general">General</a></li>
-				<li><a class="apasscode" href="#passcode">Passcode</a></li>
-				<li><a class="awifi" href="#wifi">WiFi</a></li>
-				<li><a class="alocation" href="#location">Location</a></li>
-				<li><a class="anetwork" href="#network">Network</a></li>
-				<li><a class="aapps" href="#apps">Apps</a></li>
-				<li><a class="aothers" href="#others">Others</a></li>
-				<li class="ui-tab-dialog-close"></li>
+				<li><a class="form_tool green" data-action="save" href="#">Save</a></li>
+				<li><a class="form_tool yellow" data-action="cancel" href="#">Cancel</a></li>
+				<li><a class="form_tool red" data-action="delete" href="#">Delete</a></li>
 			</ul>
-			<div>
-			<div id="general"></div>
-			<div id="passcode"></div>
-			<div id="wifi"></div>
-			<div id="location"></div>
-			<div id="network"></div>
-			<div id="apps"></div>
-			<div id="others"></div>
-			</div>
-		</div>
+	    </div> -->
 	</div>
+</div>
 
 <script>
-	// user-defined attribute
-	var listData = {
-		'policy':{
-			'policy_management':{
-				name: 'Policy Management',
-				list: {
-					'id': 'Id',
-					'profile_name': 'Policy Name',
-					'identifier': 'Policy Identifier',
-					'status': 'Status'
-				}
-			}
-		},
-		'general':{
-			'policy_general':{
-				name: 'General',
-				list: {
-					'profile_name': 'Policy Name',
-					'description': 'Description',
-					'org_name': 'Organization',
-					'identifier': 'Identifier',
-					'created_at': 'Created Date',
-					'updated_at': 'Last Update'
-				}
-			}
-		},
-		'passcode':{
-			'policy_passcode':{
-				name: 'Passcode',
-				list: {
-					'simple': 'Allow simple value',
-					'alphanumeric': 'Requires alphanumeric value',
-					'min_length': 'Minimum passcode length',
-					'min_complex_char': 'Minimum complex characters',
-					'max_age': 'Maximum passcode age',
-					'auto_lock': 'Maximum Auto-lock',
-					'history': 'Maximum passcode history',
-					'max_fail': 'Maximum number of fail attempts'
-				}
-			}
-		},
-		'wifi':{
-			'policy_wifi':{
-				name: 'WiFi',
-				list: {
-					'id': 'id',
-					'ap_name': 'ap_name',
-					'ap_status': 'ap_status'
-				}
-			}
-		},
-		'location':{
-			'policy_location':{
-				name: 'Location',
-				list: {
-					'id': 'id',
-					'location_name': 'Location Name'
-				}
-			}
-		},
-		'network':{
-			'policy_network':{
-				name: 'Network',
-				list: {
-					'call_logging': 'Call Logging',
-					'sms_logging': 'SMS Logging'
-				}
-			}
-		},
-		'apps':{
-			'policy_apps':{
-				name: 'Apps',
-				list: { // get from policy_location_blacklist_app
-					'id': 'id',
-					'app_name': 'app_name'
-				},
-				value: { //get from blacklist_app_list 
-					'id': 'id',
-					'policy_app_id': 'app_name'
-				}
-			}
-		},
-		'others':{
-			'policy_others':{
-				name: 'Others',
-				list: {
-					'allow_remote_locate': 'Allow Remote Locate',
-					'allow_remote_lock_factory_reset': 'Allow Remote Lock & Factory Reset'
-				}
-			}
-		}
-	}
-
     $(document).ready(function() {
 		$.ajax({
-			url: "http://10.1.66.105/wspolicy/list/10434/?page=0",
+			url: "http://10.1.66.105/wspolicy/list/all/",
 			type: "GET",
 			dataType: "json",
 			crossDomain: true,
 			beforeSend: function(xhr){}
 		}).success(function(response) {
-			// console.log(response)
 			var list = getList(response);
-			pushTable(list);
+			pushTable(list, listData.list.policy.policy_management);
+            getMoreDetails(response.data[0]['id'])  
 		});
 	});
-
-	function getList(data){
-		var td = [];
-		$.each(data, function(k,v){
-			$.each(v.attributes, function(k2,v2){
-				v.attributes[k2] = getDefiniton(k2,v2);
-			});
-			td.push(v.attributes)
-		});
-		return td;
-	}
-
-	// user defined definition from js/definition.js
-	function getDefiniton(k,v){
-		if(typeof definitions[k] != 'undefined'){
-			return definitions[k][v];
-		} else {
-			return v;
-		}
-	}
-	
-	function pushTable(td){
-		var fields = []
-		$.each(listData.policy.policy_management.list, function(k,v){
-			fields.push({ field: k, title: v})
-		});
-		fields.push({command: { text: "More", click: getMoreDetails, attributes:{class:"test"} }});
-
-		// constuct page list item
-		var grid = $(".compare").kendoGrid({
-			dataSource: {
-				data: td,
-				autoBind: false,
-				schema: {
-					model: {
-						fields: fields
-					}
-				}
-			},
-			selectable: "row",
-				sortable:{
-				mode: "single",
-				allowUnsort: false
-			},
-			scrollable: false,
-			pageable: false,
-			columns: fields
-		});
-
-		// constuct search filter
-		$("#search").kendoAutoComplete({
-			dataTextField: "device_name",
-			dataValueField: "device_name",
-			dataSource: td,
-			change: function () {
-				var filtered;
-				var value = this.value();
-				if (value) {
-					grid.data("kendoGrid").dataSource.filter({ field: "device_name", operator: "contains", value: value });
-				} else {
-					grid.data("kendoGrid").dataSource.filter({});
-				}
-			}
-		});
-	}
-
-	function getMoreDetails(e){
-		var clickData = this.dataItem($(e.currentTarget).closest("tr"));
-		$.ajax({
-			url: "http://10.1.66.105/wspolicy/detail/10434/"+clickData.id,
-			type: "GET",
-			dataType: "json",
-			crossDomain: true,
-			success: function(response){
-				console.log(response, clickData)
-				// construct tab
-				$.fn.tabbedDialog = function () {
-					var disabledTab = []; // list of tab index to be disabled
-					this.tabs();
-					this.dialog({'modal':true,'width':'80%', 'minHeight':600,'draggable':false});
-					this.find('.ui-tab-dialog-close').append($('a.ui-dialog-titlebar-close'));
-					$('.ui-dialog-title').html(response.policy_profile.attributes.profile_name);
-
-
-// #general		General
-// #passcode	Passcode
-// #wifi		WiFi
-// #location	Location
-// #network		Network
-// #apps		Apps
-// #others		Others
-
-					var general = (response.policy_profile.length != 0)? viewDetails(response.policy_profile, listData.general): disabledTab.push(2);
-					$('#general').html(general);
-
-			// console.log(Object.keys(response.policy_passcode).length)
-					var passcode = (Object.keys(response.policy_passcode).length != 0)? viewDetails(response.policy_passcode, listData.passcode): disabledTab.push(4);
-					$('#passcode').html(passcode);
-
-					var wifi = (response.wifi_access_points_list.length != 0)? viewDetails(response.wifi_access_points_list, listData.wifi): disabledTab.push(3);			
-					$('#wifi').html(wifi);
-
-					var location = (response.location_list.length != 0)? viewDetails(response.location_list, listData.location): disabledTab.push(3);			
-					$('#location').html(location);
-
-					// var network = (response.device_policy.length != 0)? viewDetails(response.device_policy, listData.policy): disabledTab.push(3);			
-					// $('#network').html(network);
-
-					var apps = (response.blacklist_app_list.length != 0)? viewDetails(response.blacklist_app_list, listData.apps): disabledTab.push(3);			
-					$('#apps').html(apps);
-
-					var others = (response.policy_profile.length != 0)? viewDetails(response.policy_profile, listData.others): disabledTab.push(3);			
-					$('#others').html(others);
-
-
-
-
-
-					// init google maps
-					// if(response.device_locate.length != 0){
-					// 	$('.alocation').click(function(){
-					// 		google.maps.event.addDomListener(document, 'load', viewLocation(response.device_locate[0]['attributes']['latitude'],response.device_locate[0]['attributes']['longitude']));
-					// 	});
-					// } else {
-					// 	disabledTab.push(1);
-					// }	
-					// remove empty tab								
-					this.tabs({disabled:disabledTab});
-				}
-				// construct modal window
-				$('#details').tabbedDialog();
-			}
-		});
-		return false;
-	}
-
-	// function viewLocation(lat,lng) {
-	// 	var myLatlng = new google.maps.LatLng(lat,lng);
-	// 	var mapOptions = {
-	// 		zoom: 16,
-	// 		center: myLatlng,
-	// 		scrollwheel: false,
-	// 		navigationControl: false,
-	// 		mapTypeControl: false,
-	// 		scaleControl: false,
-	// 		draggable: true,
-	// 		streetViewControl: false
-	// 	}
-	// 	var map = new google.maps.Map(document.getElementById('location_map'), mapOptions);
-	// 	var marker = new google.maps.Marker({
-	// 		position: myLatlng,
-	// 		map: map,
-	// 		title: 'Device Location'
-	// 	});
-	// }
-
-	function viewDetails(data, setlist, type){
-		// console.log(data, setlist)
-		var template = '', attr;
-		$.each(setlist, function(k,v){
-			template +='<span class="sub_tab_title">'+v.name+'</span>'
-
-			if(typeof data != 'undefined'){
-				if(!type){ // check if table=true or null
-
-					template +='<dl>'
-						$.each(v.list, function(k2,v2){			
-							attr = (typeof data[0] != 'undefined')? data[0]['attributes'][k2]: data['attributes'][k2];
-							attr = (typeof getDefiniton(k2,attr) != 'undefined')? getDefiniton(k2,attr): attr;	
-							template +='<dt>'+v2+'</dt>'
-							template +='<dd>'+attr+'</dd>'
-						});
-					template +='</dl>'
-
-				} else {
-					template +='<table>'
-					template +='<tr>'
-					$.each(v.list, function(k2,v2){
-						template +='<th>'+v2+'</th>'
-					});
-					template +='</tr>'
-					$.each(data, function(k3,v3){	
-						template +='<tr>'
-						$.each(v.list, function(k2,v2){
-							template +='<td>'+v3['attributes'][k2]+'</td>'
-						});
-						template +='</tr>'
-					});
-					template +='</table>'
-				}
-			} else {
-				template +='<p class="message">'+v.ifEmpty+'</p>'
-			}
-		});
-		return template;
-	}
 </script>
 </body>
 </html>

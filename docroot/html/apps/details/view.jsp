@@ -4,7 +4,7 @@
     <link href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
     <link href="<%=request.getContextPath()%>/html/apps/details/css/apps_details.css" rel="stylesheet" />
 
-    <div id="container">
+    <div class="portlet_container">
         <div id="details">
             <ul>
                 <li><a class="aapp_details" href="#app_details">App Details</a></li>

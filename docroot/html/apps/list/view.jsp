@@ -4,7 +4,7 @@
     <script src="<%=request.getContextPath()%>/html/apps/list/js/jquery.quicksand.js"></script>
     <link href="<%=request.getContextPath()%>/html/apps/list/css/apps_list.css" rel="stylesheet" />
 
-    <div id="container">
+    <div class="portlet_container">
         <div id="filter">
             <span>Filter by platform:</span>
             <a href="#Android" class="type">Android</a>

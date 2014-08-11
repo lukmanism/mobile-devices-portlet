@@ -68,6 +68,7 @@ ul.ui-widget-header, .ui-widget-header {
 .ui-tabs .ui-tabs-nav li.ui-tabs-active {
     border: 1px solid;
     border-color: #dddddd #dddddd rgba(0, 0, 0, 0);
+    padding-bottom: 0px;
 }
 .ui-tabs .ui-tabs-nav li.ui-tabs-default {
     border: 2px solid;

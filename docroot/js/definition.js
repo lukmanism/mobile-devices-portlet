@@ -12,4 +12,18 @@ var definitions = {
 	'platform' : ['', 'Android', 'iOS', 'Both'],
 	'organization_id' : ['', 'Mimos Berhad'],
 	'location_status' : ['', 'Active', 'Hidden'], // Values TBC
+	'alphanumeric': ['Disabled' ,'Enabled'],
+	'auto_lock': ['Disabled' ,'Enabled'],
+	'grace_period': ['Disabled' ,'Enabled'],
+	'history': ['Disabled' ,'Enabled'],
+	'max_age': ['Disabled' ,'Enabled'],
+	'max_fail': ['Disabled' ,'Enabled'],
+	'min_complex_char': ['Disabled' ,'Enabled'],
+	'min_length': ['Disabled' ,'Enabled'],
+	'simple': ['Disabled' ,'Enabled'],
+	'sms_logging': ['Disabled' ,'Enabled'],
+	'allow_compromised_device': ['Disabled' ,'Enabled'],
+	'allow_remote_locate': ['Disabled' ,'Enabled'],
+	'allow_remote_lock_factory_reset': ['Disabled' ,'Enabled'],
+	'call_logging': ['Disabled' ,'Enabled'],
 }

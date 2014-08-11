@@ -72,7 +72,20 @@
 		<icon>/icon.png</icon>
 		<header-portlet-css>/css/base_style.css</header-portlet-css>
 		<footer-portlet-javascript>/js/definition.js</footer-portlet-javascript>
+		<footer-portlet-javascript>/js/include_policies.js</footer-portlet-javascript>
+		<footer-portlet-javascript>http://code.jquery.com/ui/1.11.0/jquery-ui.js</footer-portlet-javascript>
 		<css-class-wrapper>policies-list-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>policies-details</portlet-name>
+		<icon>/icon.png</icon>
+		<header-portlet-css>/css/base_style.css</header-portlet-css>
+		<header-portlet-css>http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css</header-portlet-css>
+		<footer-portlet-javascript>/js/definition.js</footer-portlet-javascript>
+		<footer-portlet-javascript>/js/include_policies.js</footer-portlet-javascript>
+		<footer-portlet-javascript>http://code.jquery.com/ui/1.11.0/jquery-ui.js</footer-portlet-javascript>
+		<footer-portlet-javascript>https://maps.googleapis.com/maps/api/js?v=3.exp</footer-portlet-javascript>
+		<css-class-wrapper>policies-details-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
 		<portlet-name>utilities</portlet-name>

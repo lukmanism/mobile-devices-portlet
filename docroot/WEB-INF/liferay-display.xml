@@ -11,6 +11,7 @@
 		<portlet id="locations-details"></portlet>
 		<portlet id="dashboard-list"></portlet>
 		<portlet id="policies-list"></portlet>
+		<portlet id="policies-details"></portlet>
 		<portlet id="utilities"></portlet>
 	</category>
 </display>

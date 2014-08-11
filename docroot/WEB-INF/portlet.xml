@@ -153,7 +153,26 @@
 		</supports>
 		<portlet-info>
 			<title>Policies List</title>
-			<short-title>Policies List</short-title>
+			<short-title>policies List</short-title>
+			<keywords></keywords>
+		</portlet-info>
+	</portlet>
+	<portlet>
+		<portlet-name>policies-details</portlet-name>
+		<display-name>Policies Details</display-name>
+		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/policies/details/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Policies Details</title>
+			<short-title>policies Details</short-title>
 			<keywords></keywords>
 		</portlet-info>
 	</portlet>

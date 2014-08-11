@@ -1,40 +1,3 @@
-// user-defined attribute
-var listData = {
-    'list': {
-        'geofence':{
-            'geofence_list':{
-                name: 'Locations List',
-                list: {
-                    'id': 'ID',
-                    'location_name': 'Location Name',
-                    'floor_no': 'Floor No.',
-                    // 'lat_lng_string': 'Lat/Lng',
-                    'location_status': 'Status',
-                    'created_at': 'Created',
-                    // 'updated_at': 'Updated'
-                }
-            }
-        }         
-    },
-    'details': {
-        'geofence':{
-            'geofence_details':{
-                name: 'Locations Details',
-                list: {
-                    'created_at': 'Created',
-                    'floor_no': 'Floor No.',
-                    'id': 'ID',
-                    'lat_lng_string': 'Lat/Lng',
-                    'location_name': 'Location Name',
-                    'location_status': 'Status',
-                    'updated_at': 'Updated'
-                }
-            }
-        }         
-    }
-}
-
-
 function getList(data){
     var td = [];
     $.each(data.data, function(k,v){
@@ -72,7 +35,8 @@ function pushTable(td){
                     id: "id",
                     fields: fields
                 }
-            }
+            },
+            pageSize: 10
         },
         selectable: "row",
             sortable:{
@@ -187,4 +151,41 @@ function viewLocation(response) {
         fillOpacity: 0.35
     });
     polygon.setMap(map);
+}
+
+
+// user-defined attribute
+var listData = {
+    'list': {
+        'geofence':{
+            'geofence_list':{
+                name: 'Locations List',
+                list: {
+                    'id': 'ID',
+                    'location_name': 'Location Name',
+                    'floor_no': 'Floor No.',
+                    // 'lat_lng_string': 'Lat/Lng',
+                    'location_status': 'Status',
+                    'created_at': 'Created',
+                    // 'updated_at': 'Updated'
+                }
+            }
+        }         
+    },
+    'details': {
+        'geofence':{
+            'geofence_details':{
+                name: 'Locations Details',
+                list: {
+                    'created_at': 'Created',
+                    'floor_no': 'Floor No.',
+                    'id': 'ID',
+                    'lat_lng_string': 'Lat/Lng',
+                    'location_name': 'Location Name',
+                    'location_status': 'Status',
+                    'updated_at': 'Updated'
+                }
+            }
+        }         
+    }
 }

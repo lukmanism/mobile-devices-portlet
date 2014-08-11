@@ -2,7 +2,7 @@
 <portlet:defineObjects />
 
 <link href="<%=request.getContextPath()%>/html/devices/list/css/devices_list.css" rel="stylesheet" />
-<div id="container">
+<div class="portlet_container">
     <div class="filter">
         <input type="text" id="search" placeholder="Filter" class="input"/>
     </div>
