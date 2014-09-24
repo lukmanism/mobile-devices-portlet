@@ -3,8 +3,7 @@
     // property uniformly across Safari/Chrome/Webkit, Firefox 3.5+, IE 9+, and Opera 11+.
     // 2009-2011 Zachary Johnson www.zachstronaut.com
     // Updated 2011.05.04 (May the fourth be with you!)
-    function getTransformProperty(element)
-    {
+    function getTransformProperty(element){
         // Try transform first for forward compatibility
         // In some versions of IE9, it is critical for msTransform to be in
         // this list before MozTranform.

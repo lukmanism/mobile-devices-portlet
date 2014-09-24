@@ -1,97 +1,181 @@
 #filter {
-    padding: 0px 0px 20px;
-    width: 100%;
-    text-align: right;
+		padding: 0px 0px 20px;
+		width: 100%;
+		text-align: right;
 }
 #filter span {
-    margin-right: 6px;
+		margin-right: 6px;
 }
 #filter a {
-    display: inline-block;
-    padding: 0px 2px;
-    color: #009ae5;
+		display: inline-block;
+		padding: 0px 2px;
+		color: #009ae5;
 }
 
 #filter a.active {
-    color: #555555;
+		color: #555555;
 }
 
 .clear {
-  clear: both;
-  float: none;
-  height: 1px;
-  line-height: 1px;
+	clear: both;
+	float: none;
+	height: 1px;
+	line-height: 1px;
 }
 a, ins, del {
-  text-decoration: none;
+	text-decoration: none;
 }
 #applications {
-  margin: 0px!important;
-  margin: 0px auto!important;
-  width: 99%;
+	margin: 0px!important;
+	margin: 0px auto!important;
+	width: 99%;
 }
 #applications li {
-  list-style: none outside none;
-  border: 1px solid transparent;
-  border-radius: 4px;
+	list-style: none outside none;
+	border: 1px solid transparent;
+	border-radius: 4px;
 }
 #applications li.active {
-  list-style: none outside none;
-  border: 1px solid #eeeeee;
-  border-radius: 4px;
-  color: #686f74;
+	list-style: none outside none;
+	border: 1px solid #eeeeee;
+	border-radius: 4px;
+	color: #686f74;
 }
 #applications ol, ul {
 }
 #applications ol li {
-  list-style: decimal outside none;
+	list-style: decimal outside none;
 }
 #applications ul li {
-  list-style: square outside none;
+	list-style: square outside none;
 }
 .image-grid {
-  margin: 20px auto;
-  width: 100%;
+	margin: 20px auto;
+	width: 100%;
 }
 .image-grid:after {
-  clear: both;
-  content: "";
-  display: block;
-  height: 0;
-  overflow: hidden;
+	clear: both;
+	content: "";
+	display: block;
+	height: 0;
+	overflow: hidden;
 }
 .image-grid li {
-  float: left;
-  height: auto;
-  line-height: 17px;
-  margin: 10px;
-  padding: 10px;
-  overflow: hidden;
-  text-align: center;
-  height: 168px;
-  list-style: none;
-  width: 25%!important;
-  min-width: 128px;
+	float: left;
+	height: auto;
+	line-height: 17px;
+	margin: 10px;
+	padding: 10px;
+	overflow: hidden;
+	text-align: center;
+	height: 168px;
+	list-style: none;
+	width: 25%!important;
+	min-width: 128px;
 }
 .image-grid li span{
-  overflow: hidden;
-  width: 128px;
-  height: 128px !important;
-  display: block;
-  margin-bottom: 8px;
+	overflow: hidden;
+	/*width: 128px;*/
+	height: 128px !important;
+	display: block;
+	margin-bottom: 8px;
 }
 .image-grid li p {
-  padding: 0px!important;
-  margin: 0px!important;
-  line-height: 18px!important;
+	padding: 0px!important;
+	margin: 0px!important;
+	line-height: 18px!important;
+}
+.image-grid li p.app_name {
+	height: 18px; 
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+.image-grid li p.app_size {
+	font-style: italic;
 }
 .image-grid li img, .image-grid li strong {
-  display: block;
-  margin: 0 auto;
+	display: block;
+	margin: 0 auto;
 }
 .image-grid li img {
-  cursor: pointer;
-  height: 128px !important;
+	cursor: pointer;
+	height: 128px !important;
 }
 .image-grid li strong {
+}
+
+.upload-file-container,
+.file-container {
+	background-repeat: no-repeat;
+	background-size: contain;
+	width: 48px;
+	height: 48px;
+	border: 1px solid #dddddd;
+	border-radius: 3px;
+	display: inline-block;
+	margin: 0 2px;
+	position: relative;
+	overflow: hidden;
+}
+
+.file-container {
+	cursor: pointer;
+	text-align: center;
+}
+
+.upload-file-container input {
+	filter: alpha(opacity=0);
+	opacity: 0;
+	width: 48px;
+	height: 48px;
+	cursor: pointer;
+	z-index: 98;
+	position: absolute;
+}
+
+.upload-file-container img,
+.file-container img {
+	margin: 0px auto;
+	max-width: 48px; 
+	min-height: 48px; 
+}
+
+.upload-file-container .remove-file {
+	width: 12px;
+	height: 12px;
+	cursor: pointer;
+	z-index: 99;
+	position: absolute;
+	bottom: 4px;
+	right: 4px;
+	background-image: url('../../../../assets/remove_icon.png');
+	background-repeat: no-repeat;
+	display: block;
+}
+
+.upload-file-container .remove-file:hover {
+	background-image: url('../../../../assets/remove_icon_hover.png');
+}
+
+.postiframe {
+	border: none;
+	width: 48px;
+	height: 48px;
+	z-index: 2;
+	position: absolute;
+	top: 0px;
+	left: 0px;
+}
+
+.row label {
+	width: 30%;
+	display: block;
+	float: left;
+}
+
+.ui-dialog.ui-widget{
+	text-align: center;
+	margin-top: 20px;
+	padding-bottom: 40px;
+	z-index: 999!important;
 }

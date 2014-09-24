@@ -129,73 +129,73 @@ function getMoreDetails(id){
         dataType: "json",
         crossDomain: true,
         success: function(response){
-            console.log(response)
+            // console.log(response)
             var disabledTab = []; // list of tab index to be disabled
 
-            var i = 0, getset, getEl = [];
-            var ul = $('<ul/>');
-            var div = $('<div/>');
-            var push_tabs =  $('#details');
+            // var i = 0, getset, getEl = [];
+            // var ul = $('<ul/>');
+            // var div = $('<div/>');
+            // var push_tabs =  $('#details');
 
-            $.each(listData.details, function(k,v){  
-        // console.log(k,v)
-                if(typeof v.set == 'object'){                    
-                    var cross_data = {
-                        master: response[v.set[0]],
-                        slave: response[v.set[1]],
-                        rel: v.rel
-                    }
-                    crossData(cross_data);
-                    getset = v.set[0];
-                } else {
-                    getset = v.set;
-                }
-                var temp;
-                if(getValid(response[getset])){
-                    temp = viewDetails(response[getset], v, v.type)
-                } else {
-                    temp = '<p class="message">No data.</p>';
-                    disabledTab.push(i)
-                }
-                // $('#'+k, ).html(temp);
+        //     $.each(listData.details, function(k,v){  
+        // // console.log(k,v)
+        //         if(typeof v.set == 'object'){                    
+        //             var cross_data = {
+        //                 master: response[v.set[0]],
+        //                 slave: response[v.set[1]],
+        //                 rel: v.rel
+        //             }
+        //             crossData(cross_data);
+        //             getset = v.set[0];
+        //         } else {
+        //             getset = v.set;
+        //         }
+        //         var temp;
+        //         if(getValid(response[getset])){
+        //             temp = viewDetails(response[getset], v, v.type)
+        //         } else {
+        //             temp = '<p class="message">No data.</p>';
+        //             disabledTab.push(i)
+        //         }
+        //         // $('#'+k, ).html(temp);
 
-                    ul.append(createElement('li',k,v, temp))
-                    div.append(createElement('div',k,v, temp))
-                i++;
-            })
+        //             ul.append(createElement('li',k,v, temp))
+        //             div.append(createElement('div',k,v, temp))
+        //         i++;
+        //     })
 
         // console.log(getEl)
-            push_tabs.html([ul,div]).hide();
-            console.log(push_tabs)
-            setTimeout(function(){
-                push_tabs.tabs({disabled:disabledTab}).show(300);
-            }, 300);
+            // push_tabs.html([ul,div]).hide();
+            // console.log(push_tabs)
+            // setTimeout(function(){
+            //     push_tabs.tabs({disabled:disabledTab}).show(300);
+            // }, 300);
 
 
-            // var summary = viewDetails(response.device, listData.details.device, true);
-            // $('#summary').html(summary);
+            var summary = viewDetails(response.device, listData.details.device, true);
+            $('#summary').html(summary);
 
-            // var apps = (response.device_apps.length != 0)? viewDetails(response.device_apps, listData.details.apps, 'table'): disabledTab.push(2);
-            // $('#apps').html(apps);
+            var apps = (response.device_apps.length != 0)? viewDetails(response.device_apps, listData.details.apps, 'table'): disabledTab.push(2);
+            $('#apps').html(apps);
 
-            // var geofence = (response.device_location_activity.length != 0)? viewDetails(response.device_location_activity, listData.details.location_activity): disabledTab.push(4);
-            // $('#geofence').html(geofence);
+            var geofence = (response.device_location_activity.length != 0)? viewDetails(response.device_location_activity, listData.details.location_activity): disabledTab.push(4);
+            $('#geofence').html(geofence);
 
-            // var policies = (response.device_policy.length != 0)? viewDetails(response.device_policy, listData.details.policy): disabledTab.push(3);
-            // $('#policies').html(policies);
+            var policies = (response.device_policy.length != 0)? viewDetails(response.device_policy, listData.details.policy): disabledTab.push(3);
+            $('#policies').html(policies);
 
             // init google maps
-            // if(response.device_locate.length != 0){
-            //     $('.alocation').click(function(){
-            //         setTimeout(function(){
-            //         google.maps.event.addDomListener(document, 'load', viewLocation(response.device_locate[0]['latitude'],response.device_locate[0]['longitude']));
-            //         }, 300);
-            //     });
-            // } else {
-            //     disabledTab.push(1);
-            // }
+            if(response.device_locate.length != 0){
+                $('.alocation').click(function(){
+                    setTimeout(function(){
+                    google.maps.event.addDomListener(document, 'load', viewLocation(response.device_locate[0]['latitude'],response.device_locate[0]['longitude']));
+                    }, 300);
+                });
+            } else {
+                disabledTab.push(1);
+            }
 
-            // $('#details').tabs({disabled:disabledTab});
+            $('#details').tabs({disabled:disabledTab});
         },
         error:function (xhr, ajaxOptions, thrownError){
             $('#summary').html('<p class="message">Data not loaded.</p>');

@@ -3,8 +3,24 @@
 
     <link href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
     <link href="<%=request.getContextPath()%>/html/policies/details/css/policies_details.css" rel="stylesheet" />
+    <link href="<%=request.getContextPath()%>/html/policies/details/css/toggles.css" rel="stylesheet" />
        
 <div class="portlet_container">
+    <div class="tools">
+        <ul>
+            <li><a class="form_tool" data-action="add" href="#">Add</a></li>
+            <li><a class="form_tool" data-action="edit" href="#">Edit</a></li>
+            <li><a class="form_tool" data-action="impose" href="#">Impose Policy</a></li>
+        </ul>
+    </div>
+    <div class="form_actions portlet_hidden">
+        <ul>
+            <li><a class="form_tool green save" data-action="save" data-type="" href="#">Save</a></li>
+            <li><a class="form_tool yellow" data-action="cancel" href="#">Cancel</a></li>
+            <li><a class="form_tool red delete" data-action="delete" href="#">Delete</a></li>
+        </ul>
+    </div>
+    <p id="message" class="portlet_hidden"></p>
     <div id="details">
         <ul>
             <li><a class="ageneral" href="#general">General</a></li>

@@ -1,19 +1,33 @@
-.ui-widget { 
+.ui-widget, .portlet_container,
+.datafield input,
+.datafield select { 
 	font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
 	font-size: 14px;
 	line-height: 20px;
 }
-dd, dt {
+.portlet_container .portlet_hidden {
+	display: none;
+}
+.portlet_container dd, .portlet_container dt {
 	display: table;
 	line-height: 24px;
 	height: 24px;
 }
-dt {
+.portlet_container th {
+	text-align: left;
+}
+.portlet_container th:nth-child(1) {
+	width: 36%;
+}
+.portlet_container th:nth-child(2) {
+	width: 64%;	
+}
+.portlet_container dt {
 	float: left;
 	width: 36%;
 	font-weight: normal!important;
 }
-dd {
+.portlet_container dd {
 	width: 64%;	
 }
 .ui-dialog-title{
@@ -24,16 +38,14 @@ dd {
 	padding: 10px 0;
 	display: block;
 }
-p.message {
+.portlet_container #message {
 	border-radius: 2px;
 	padding: 8px 35px 8px 14px;
-	text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
 	border-radius: 3px 3px 3px 3px;
 	-moz-border-radius: 3px 3px 3px 3px;
 	-webkit-border-radius: 3px 3px 3px 3px;
-	background-color: #cef1fc;
-    border-color: #9ee3f9;
-    color: #12718f;
+    border-color: #EBEBEB;
+    color: #ffffff;
 }
 #location_map {
 	margin: 20px 0;
@@ -93,7 +105,7 @@ ul.ui-widget-header, .ui-widget-header {
 .ui-state-default.ui-corner-top.ui-state-disabled {
 	display: none;
 }
-#apps table {
+.ui-tabs-panel table {
 	width: 100%;
 }
 #location_map {
@@ -107,15 +119,15 @@ ul.ui-widget-header, .ui-widget-header {
 
 
 /*-----------------------Add/Edit/Delete----------*/
-a.green{
+a.green,.green {
 	background-color: #A2DF53;
 	color: #fff;
 }
-a.yellow{
+a.yellow, .yellow {
 	background-color: #FFB74F;
 	color: #fff;
 }
-a.red{
+a.red, .red {
 	background-color: #FF7663;
 	color: #fff;
 }
@@ -155,4 +167,20 @@ a.red{
 .form_actions li a:hover {
 	color: #808080;
 	border: none;
+}
+.datafield input,
+.datafield select,
+.datafield textarea {
+    border: 1px solid #dddddd;
+    padding: 0px;
+    margin: 0px;
+    border-radius: 3px;
+}
+.datafield select {
+	padding: 0px;
+	margin: 0px;
+}
+.datafield select:focus,
+.datafield input:focus {
+	background-color: #D7F2FF;
 }

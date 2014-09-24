@@ -3,6 +3,9 @@
     font-size: 14px;
     line-height: 20px;
 }
+.portlet_hidden {
+    display: none;
+}
 dd, dt {
     display: table;
     line-height: 24px;
@@ -34,6 +37,15 @@ p.message {
     background-color: #cef1fc;
     border-color: #9ee3f9;
     color: #12718f;
+}
+.portlet_container #message {
+    border-radius: 2px;
+    padding: 8px 35px 8px 14px;
+    border-radius: 3px 3px 3px 3px;
+    -moz-border-radius: 3px 3px 3px 3px;
+    -webkit-border-radius: 3px 3px 3px 3px;
+    border-color: #EBEBEB;
+    color: #ffffff;
 }
 #location_map {
     margin: 20px 0;
@@ -103,4 +115,73 @@ ul.ui-widget-header, .ui-widget-header {
 }
 .ui-widget-content {
     border: none;
+}
+
+
+
+/*-----------------------Add/Edit/Delete----------*/
+a.green,.green {
+    background-color: #A2DF53;
+    color: #fff;
+}
+a.yellow, .yellow {
+    background-color: #FFB74F;
+    color: #fff;
+}
+a.red, .red {
+    background-color: #FF7663;
+    color: #fff;
+}
+
+.tools, .form_actions {
+    padding: 0px 0px 20px;
+    width: 100%;
+    text-align: right;
+}
+.tools ul, .form_actions ul {
+    margin: 0px;
+    padding: 0px;
+}
+.tools ul li, .form_actions li {
+    list-style-type: none;
+    display: inline-block;
+}
+.tools li a, .form_actions li a {
+    display: block;
+    text-align: center;
+    margin: 0px 0px 0px 4px;
+    padding: 8px 12px;
+    border-radius: 4px;
+    color: #009ae5;
+    border: 1px solid #dddddd;
+    text-decoration: none;
+}
+.form_actions li a {
+    color: #fff;
+    border: none;
+}
+.tools li a:hover , .form_actions li a:hover {
+    background-color: #eeeeee;
+    border: 1px solid #ffffff;
+    text-decoration: none!important;
+}
+.form_actions li a:hover {
+    color: #808080;
+    border: none;
+}
+.datafield input,
+.datafield select,
+.datafield textarea {
+    border: 1px solid #dddddd;
+    padding: 0px;
+    margin: 0px;
+    border-radius: 3px;
+}
+.datafield select {
+    padding: 0px;
+    margin: 0px;
+}
+.datafield select:focus,
+.datafield input:focus {
+    background-color: #D7F2FF;
 }

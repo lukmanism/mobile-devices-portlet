@@ -3,42 +3,61 @@
 <head>
 	<title></title>
 
-    <link href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
-     
+	<link href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
+	 
 	<link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.common.min.css" rel="stylesheet" />
-    <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.default.min.css" rel="stylesheet" />
-    <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.dataviz.min.css" rel="stylesheet" /> 
-    <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.dataviz.default.min.css" rel="stylesheet" />
-    
-    <script src="http://cdn.kendostatic.com/2014.1.528/js/jquery.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
-    <script src="http://cdn.kendostatic.com/2014.1.528/js/kendo.all.min.js"></script>
-    <link href="../details/css/locations_details.css" rel="stylesheet" />
-    <link href="../../../css/base_style.css" rel="stylesheet" />
-    <link href="css/locations_list.css" rel="stylesheet" />
+	<link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.default.min.css" rel="stylesheet" />
+	<link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.dataviz.min.css" rel="stylesheet" /> 
+	<link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.dataviz.default.min.css" rel="stylesheet" />
+	
+	<script src="http://cdn.kendostatic.com/2014.1.528/js/jquery.min.js"></script>
+	<script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
+	<script src="http://cdn.kendostatic.com/2014.1.528/js/kendo.all.min.js"></script>
+	<link href="../details/css/locations_details.css" rel="stylesheet" />
+	<link href="../../../css/base_style.css" rel="stylesheet" />
+	<link href="css/locations_list.css" rel="stylesheet" />
 	<script src="../../../js/definition.js"></script>
 	<script src="../../../js/include_locations.js"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp"></script>
+	<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=drawing"></script>
 </head>
 <body>
 
+<div class="portlet_container">
+	<div class="filter">
+		<input type="text" id="search" placeholder="Filter" class="input"/>
+	</div>
+	<div class="compare"></div>
 
-
-
-<div id="container">
-    <div class="filter">
-        <input type="text" id="search" placeholder="Filter" class="input"/>
+    <div class="tools">
+		<ul>
+			<li><a class="form_tool" data-action="add" href="#">Add</a></li>
+			<li><a class="form_tool" data-action="edit" href="#">Edit</a></li>
+		</ul>
     </div>
-    <div class="compare"></div>
+
+    <div class="form_actions portlet_hidden">
+		<ul>
+			<li><a class="form_tool green save" data-action="save" data-type="" href="#">Save</a></li>
+			<li><a class="form_tool yellow" data-action="cancel" href="#">Cancel</a></li>
+			<li><a class="form_tool red delete" data-action="delete" href="#">Delete</a></li>
+		</ul>
+    </div>
+
+	<p id="message" class="portlet_hidden"></p>
 
 	<div id="details">
 		<ul>
-			<li><a class="asummary" href="#summary">Summary</a></li>
+			<li><a class="ageofence_details" href="#geofence_details">Summary</a></li>
 			<li class="ui-tab-dialog-close"></li>
 		</ul>
 		<div>
-		<div id="summary"><span class="sub_tab_title">Summary</span><div id="location_map"></div></div>
+		<div id="geofence_details">
+			<!-- <span class="sub_tab_title">Summary</span>
+			<div class="datafield" id="location_map"></div> -->
 		</div>
+		</div>
+
+
 	</div>
 </div>
 
@@ -47,26 +66,26 @@
 
 $(document).ready(function() {
 	$.ajax({
-	    url: "http://10.1.66.105/wsgeofence/list/all/",
-	    type: "GET",
-	    dataType: "json",
-	    crossDomain: true,
-	    beforeSend: function(xhr){}
+		url: "http://10.1.66.105/wsgeofence/list/all/",
+		type: "GET",
+		dataType: "json",
+		crossDomain: true,
+		beforeSend: function(xhr){}
 	}).success(function(response) {
-        var list = getList(response);
-        pushTable(list);
-
-	    Liferay.fire('getMoreDetails',{
-	        id: response.data[0]['id']
-	    });
-
+		var list = getList(response);
+		pushTable(list);
+		// Liferay.fire('getMoreDetails',{
+		//     id: response.data[0]['id']
+		// });
+		getMoreDetails(response.data[0]['id']);
 	}); 
+    $('.portlet_hidden').hide();
 });     
 
 $(document).ready(function() {
-    Liferay.on('getMoreDetails',function(event) {
-        getMoreDetails(event.id);
-    });  
+	// Liferay.on('getMoreDetails',function(event) {
+		// getMoreDetails(event.id);
+	// });  
 });  
 
 </script>

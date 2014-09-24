@@ -1,0 +1,47 @@
+.toggle-slide {
+  overflow: hidden;
+  cursor: pointer;
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+  direction: ltr;
+}
+.toggle-slide .toggle-on,
+.toggle-slide .toggle-off,
+.toggle-slide .toggle-blob {
+  float: left;
+}
+.toggle-slide .toggle-blob {
+  position: relative;
+  z-index: 99;
+  cursor: hand;
+  cursor: -webkit-grab;
+  cursor: -moz-grab;
+  cursor: grab;
+}
+
+.toggle{
+  margin: 0px;
+  height: 20px;
+  line-height: 20px;
+  text-align: center;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.toggle-on {
+  background: #A2DF53;
+}
+.toggle-off {
+  background: #FF7663;
+}
+.toggle-on,
+.toggle-off {
+  color: #ffffff;
+}
+.toggle-blob {
+  border-radius: 2px;
+  background: -webkit-gradient(linear, left top, left bottom, from(#EFEFEF), to(#cfcfcf));
+  background: -webkit-linear-gradient(#EFEFEF, #cfcfcf);
+  background: linear-gradient(#EFEFEF, #cfcfcf);
+}

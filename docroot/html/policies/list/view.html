@@ -11,11 +11,13 @@
 
     <link href="css/policies_list.css" rel="stylesheet" />
     <link href="../details/css/policies_details.css" rel="stylesheet" />
+    <link href="../details/css/toggles.css" rel="stylesheet" />
 
     <script src="http://cdn.kendostatic.com/2014.1.528/js/jquery.min.js"></script>
     <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
     <script src="http://cdn.kendostatic.com/2014.1.528/js/kendo.all.min.js"></script>
     <script src="../../../js/definition.js"></script>
+    <script src="../../../js/toggles.min.js"></script>
     <script src="../../../js/include_policies.js"></script>
 </head>
 <body>
@@ -26,14 +28,23 @@
     </div>
     <div class="compare"></div>
 
-<!--     <div class="tools">
+	<div class="tools">
 		<ul>
 			<li><a class="form_tool" data-action="add" href="#">Add</a></li>
 			<li><a class="form_tool" data-action="edit" href="#">Edit</a></li>
 			<li><a class="form_tool" data-action="impose" href="#">Impose Policy</a></li>
 		</ul>
-    </div> -->
+    </div>
 
+    <div class="form_actions hidden">
+		<ul>
+			<li><a class="form_tool green save" data-action="save" data-type="" href="#">Save</a></li>
+			<li><a class="form_tool yellow" data-action="cancel" href="#">Cancel</a></li>
+			<li><a class="form_tool red delete" data-action="delete" href="#">Delete</a></li>
+		</ul>
+    </div>
+
+	<p id="message" class="hidden"></p>
 	<div id="details">
 		<ul>
 			<li><a class="ageneral" href="#general">General</a></li>
@@ -55,13 +66,6 @@
     		<div id="others"></div>
 		</div>
 
-<!-- 	    <div class="form_actions">
-			<ul>
-				<li><a class="form_tool green" data-action="save" href="#">Save</a></li>
-				<li><a class="form_tool yellow" data-action="cancel" href="#">Cancel</a></li>
-				<li><a class="form_tool red" data-action="delete" href="#">Delete</a></li>
-			</ul>
-	    </div> -->
 	</div>
 </div>
 
@@ -78,6 +82,7 @@
 			pushTable(list, listData.list.policy.policy_management);
             getMoreDetails(response.data[0]['id'])  
 		});
+
 	});
 </script>
 </body>

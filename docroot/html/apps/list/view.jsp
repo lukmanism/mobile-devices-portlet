@@ -47,10 +47,15 @@ $(document).ready(function() {
             });
             return false;
         });
-        pushMoreDetails();        
-        Liferay.fire('getAppDetails',{
-            id: response.data[0]['id']
-        });
+        pushMoreDetails();
+        if(typeof response.data[0] == 'undefined'){
+            Liferay.fire('getAppDetails');
+        } else {           
+            Liferay.fire('getAppDetails',{
+                id: response.data[0]['id']
+            });
+        }
     });
+    $('.portlet_hidden').hide();
 });
 </script>

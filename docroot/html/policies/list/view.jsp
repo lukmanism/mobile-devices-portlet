@@ -25,5 +25,6 @@
                 id: response.data[0]['id']
             });
         });
+        $('.portlet_hidden').hide();
     });   
 </script>

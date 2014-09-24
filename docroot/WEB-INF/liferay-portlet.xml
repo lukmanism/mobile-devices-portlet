@@ -57,7 +57,7 @@
 		<footer-portlet-javascript>/js/definition.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/include_locations.js</footer-portlet-javascript>
 		<footer-portlet-javascript>http://code.jquery.com/ui/1.11.0/jquery-ui.js</footer-portlet-javascript>
-		<footer-portlet-javascript>https://maps.googleapis.com/maps/api/js?v=3.exp</footer-portlet-javascript>
+		<footer-portlet-javascript>https://maps.googleapis.com/maps/api/js?v=3.exp&amp;libraries=drawing</footer-portlet-javascript>
 		<css-class-wrapper>locations-details-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
@@ -83,6 +83,7 @@
 		<header-portlet-css>http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css</header-portlet-css>
 		<footer-portlet-javascript>/js/definition.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/include_policies.js</footer-portlet-javascript>
+		<footer-portlet-javascript>/js/toggles.min.js</footer-portlet-javascript>
 		<footer-portlet-javascript>http://code.jquery.com/ui/1.11.0/jquery-ui.js</footer-portlet-javascript>
 		<footer-portlet-javascript>https://maps.googleapis.com/maps/api/js?v=3.exp</footer-portlet-javascript>
 		<css-class-wrapper>policies-details-portlet</css-class-wrapper>

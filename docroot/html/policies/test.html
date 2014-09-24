@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+    <script src="http://cdn.kendostatic.com/2014.1.528/js/jquery.min.js"></script>
+</head>
+<body>
+
+
+<div class="container">
+
+	<header id="header">
+		<span class="logo"></span>
+		<ul>
+			<li><a href="#home" class="menus">Home</a></li>
+			<li><a href="#about" class="menus">About</a></li>
+			<li><a href="#contact" class="menus">Contact</a></li>
+		</ul>
+	</header>
+
+
+	<div class="main-content">
+		<div class="sidebar-left"></div>
+		<div class="content">
+
+			<div id="content-loader"><p>tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+			quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo
+			consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse
+			cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non
+			proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p></div>
+
+			<div class="row">
+				<div class="item">a</div>
+				<div class="item">b</div>
+				<div class="item">c</div>
+				<div class="item">d</div>				
+			</div>
+			<div class="row">
+				<div class="item"></div>
+				<div class="item"></div>
+				<div class="item"></div>
+				<div class="item"></div>				
+			</div>
+			<div class="row">
+				<div class="item"></div>
+				<div class="item"></div>
+				<div class="item"></div>
+				<div class="item"></div>				
+			</div>
+			
+		</div>
+		<div class="sidebar-right"></div>	
+	</div>
+
+	
+	<footer>	
+		<ul>
+			<li><a href="#" class="menus">Other Home</a></li>
+			<li><a href="#" class="menus">Other About</a></li>
+			<li><a href="#" class="menus">Other Contact</a></li>
+		</ul>
+	</footer>
+</div>
+<script type="text/javascript" >
+
+
+var menu_item = $('.menus');
+$.each(menu_item, function(k,v){
+	$(v).bind('click', function(){
+		var href = $(this).attr('href');
+		callContent(href,$(this))
+		return false;
+	})
+
+})
+
+function callContent(pull, that){
+
+	$('#content-loader').append(pull);
+
+		// console.log(that,pull)
+}
+
+
+</script>
+<style type="text/css" media="screen">
+body {
+	font-size: 14px;
+	font-family: helvetica;
+}
+#header {
+	position: relative;
+
+}
+#header .logo {
+	background-image: url('http://2.bp.blogspot.com/-N1VV4YTwtXg/UYGQNCUmR3I/AAAAAAAAZcE/_Z1Bdgjw2a8/s128/Ouigo+logo+2013.png');
+	width: 128px;
+	height: 128px;
+	display: block;
+	margin: 0px auto;
+}
+p {
+	font-size: 1em;
+}
+#header ul {
+	margin: 0px;
+	padding: 0px;
+}
+#header ul li {
+	display: inline-block;
+	padding: 2px 4px;
+	margin: 0px 2px;
+	border: 1px solid red;
+	border-radius: 4px;
+}
+#header ul li a {}
+	
+</style>
+</body>
+</html>

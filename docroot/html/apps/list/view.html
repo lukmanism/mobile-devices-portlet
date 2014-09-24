@@ -28,10 +28,23 @@
 	<div class="clear"></div>
 	<ul id="applications" class="image-grid"></ul>
 
+    <div class="tools">
+		<ul>
+			<li><a class="form_tool" data-action="add" href="#">Add</a></li>
+			<li><a class="form_tool" data-action="edit" href="#">Edit</a></li>
+		</ul>
+    </div>
+
+    <div class="form_actions portlet_hidden">
+		<ul>
+			<li><a class="form_tool green save" data-action="save" data-type="" href="#">Save</a></li>
+			<li><a class="form_tool yellow" data-action="cancel" href="#">Cancel</a></li>
+			<li><a class="form_tool red delete" data-action="delete" href="#">Delete</a></li>
+		</ul>
+    </div>
 
 
-
-
+	<p id="message" class="portlet_hidden">asdasd</p>
 	<div id="details">
 		<ul>
 			<li><a class="aapp_details" href="#app_details">App Details</a></li>
@@ -45,8 +58,8 @@
 	</div>
 
 
-<script type="text/javascript">
 
+<script type="text/javascript">
 $(document).ready(function() {
 	$.ajax({
 	    url: "http://10.1.66.105/wsapp/list/all/",
@@ -55,6 +68,7 @@ $(document).ready(function() {
 	    crossDomain: true,
 	    beforeSend: function(xhr){}
 	}).success(function(response) {
+		// console.log(response)
 	    var list = getList(response);
 	    $('#applications').html(pushList(list));
 
@@ -79,11 +93,13 @@ $(document).ready(function() {
 			return false;
 		});
 		pushMoreDetails();
+		if(typeof response.data[0] == 'undefined'){
+			getAppDetails();
+		} else {
+			getAppDetails(response.data[0]['id']);
+		}
 	});
-		getMoreDetails(55)
-});     
-
-
+});
 </script>
 
 
