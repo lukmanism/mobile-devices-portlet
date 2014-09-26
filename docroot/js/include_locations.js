@@ -57,7 +57,6 @@ function pushTable(td){
 	});
 	fields.push({ field: 'id', title: 'Details', encoded: false, format: "<a class='more-button' href='#' onclick='pushMoreDetails({0});'>More</a>" });
 
-
 	// constuct page list item
 	var grid = $(".compare").kendoGrid({
 		dataSource: {

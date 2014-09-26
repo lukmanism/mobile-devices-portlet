@@ -77,10 +77,15 @@ function getDefiniton(k,v){
 
 function pushTable(td,filter){
 	var fields = []
-	var get_fields = (typeof filter != 'undefined')? filter.list: td[0];
-	$.each(get_fields, function(k,v){
-		var get_v = (typeof filter != 'undefined')? v: getDefiniton('fields_device',k);
-		fields.push({ field: k, title: get_v})
+	// var get_fields = (typeof filter != 'undefined')? filter.list: td[0];
+	// $.each(get_fields, function(k,v){
+	// 	var get_v = (typeof filter != 'undefined')? v: getDefiniton('fields_device',k);
+	// 	fields.push({ field: k, title: get_v})
+	// });
+	// fields.push({ field: 'id', title: 'Details', encoded: false, format: "<a class='more-button' href='#' onclick='pushMoreDetails({0});'>More</a>" });
+	var fields = []
+	$.each(listData.list.policy.policy_management.list, function(k,v){
+		fields.push({field: k, title: v})
 	});
 	fields.push({ field: 'id', title: 'Details', encoded: false, format: "<a class='more-button' href='#' onclick='pushMoreDetails({0});'>More</a>" });
 
@@ -135,13 +140,11 @@ function pushMoreDetails(id){
 function getMoreDetails(id){
 	$('.form_actions').hide();
 	$.ajax({
-		url: "http://10.1.66.105/wspolicy/detail/all/"+id,
+		url: "http://10.1.66.105/wspolicy2/detail/all/"+id,
 		type: "GET",
 		dataType: "json",
 		crossDomain: true,
 		success: function(response){
-			console.log(response)
-			// console.log(JSON.stringify(response))
 			var disabledTab = []; // list of tab index to be disabled
 			var i = 0, getset, temp;
 
@@ -170,10 +173,19 @@ function getMoreDetails(id){
 			});
 		},
 		error:function (xhr, ajaxOptions, thrownError){
-			$('#summary').html('<p class="message">Data not loaded.</p>');
+			$('#general').html('<p class="message">Data not loaded.</p>');
 			$('#details').tabs({disabled:[1,2,3,4,5,6]});
+
+			$('.form_tool').unbind('click').bind('click', function(e){// reset click event to avoid stacking bind event
+				$('.form_tool').removeClass('active');
+				formAction($(this).attr('data-action'));
+				$(this).addClass('active');
+				e.preventDefault();
+			});
+			// compileMsg(xhr.responseText, 'error');
 		}
 	});
+
 	return false;
 }
 
@@ -183,6 +195,7 @@ function getElem(type,val){
 	var form_chain = $('<div/>').attr('class', 'form_chain active');    
 	var form_section = $('<div/>').attr('class', 'form_section');
 	var label = $('<label for="'+val.name+'"/>').html(val.title);
+	var data_getval = (typeof data_val != 'undefined')? data_val: val.value;
 
 	var properties = (val.disabled === true)? 'disabled': '';
 	properties = (val.checked === true)? properties+' checked': properties;
@@ -238,9 +251,8 @@ function getElem(type,val){
 
 		case 'select':
 		case 'select-multiple':
-		// console.log(val)
 			$.each(val.defval, function(k,v){
-				selected = (k == val.value)? 'selected': '';
+				selected = (k == data_getval)? 'selected': '';
 				if(typeof v != 'object'){
 					option += '<option '+selected+' value="'+k+'">'+v+'</option>'
 				} else {
@@ -249,7 +261,7 @@ function getElem(type,val){
 					}
 				}
 			})
-			form_row = $('<select '+properties+'/>').attr('name', val.name).attr('id', val.name).append(option);
+			form_row = $('<select '+properties+'/>').attr({name: val.name, id: val.name}).append(option);
 		break;
 
 		case 'chain-checkbox':
@@ -334,16 +346,15 @@ function viewDetails(data, setlist, type){
 	$.each(setlist.data, function(k,v){
 		template +='<span class="sub_tab_title">'+v.name+'</span>';
 		if(typeof data != 'undefined'){
+			data_set = (getLength(setlist.set) >= 1)?setlist.set[0]: setlist.set;
+			rel = setlist.rel;
 			if(type != 'table'){ // check if table=true or null
 				template += '<dl>';
-					$.each(v.list, function(k2,v2){                           
-						data_set = (getLength(setlist.set) >= 1)?setlist.set[0]: setlist.set;
-						data_field;
+					$.each(v.list, function(k2,v2){
 						if(typeof data[0] != 'undefined'){
 							if(data[0]['push_val'] != 'undefined'){
 								data_field = 'id';
 								attr_ori = data[0]['push_val'];
-								rel = setlist.rel;
 							} else {
 								attr_ori = data[0][k2];
 							}
@@ -365,25 +376,33 @@ function viewDetails(data, setlist, type){
 					template +='<th>'+v4+'</th>';
 				});
 				template +='</tr>';
-				$.each(data, function(k3,v3){                       
+				$.each(data, function(k3,v3){
 					template +='<tr>';
-					$.each(v.list, function(k4,v4){
-						if(typeof v3[k4] == 'string'){
-							template +='<td>'+v3[k4]+'</td>';
-							attr_ori = k4;
-						} else {
-							data_set = (getValid(setlist.set))?setlist.set: k;
-							if(k4==='push_val'){
-								data_field = 'id';
-								rel=setlist.rel;
+						$.each(v.list, function(k4,v4){
+							if(typeof v3[k4] != 'undefined'){
+								if(typeof v3[k4] == 'string'){
+									template +='<td>'+v3[k4]+'</td>';
+									attr_ori = k4;
+								} else {
+									data_set = (getValid(setlist.set))?setlist.set: k;
+									if(k4==='push_val'){
+										data_field = 'id';
+										rel=setlist.rel;
+									} else {
+										data_field = k4;
+									}
+									data_vals = (multiple)? 'data-vals="'+v3['id']+'"': '';
+									template +='<td class="datafield" data-set="'+data_set+'" data-field="'+data_field+'" data-val="'+v3[k4]+'" data-rel="'+rel+'" data-multiple="'+multiple+'" '+data_vals+'>'+getDefiniton(attr_ori,v3[k4])+'</td>';
+								}
 							} else {
-								data_field = k4;
+								// first time edit
+								if(k4 != 'push_val'){
+									template +='<td>'+v3.name+'</td>';
+									template +='<td class="datafield" data-set="" data-field="'+v3.name+'" data-val="" data-rel=""></td>';
+								}
 							}
-							data_vals = (multiple)? 'data-vals="'+v3['id']+'"': '';
-							template +='<td class="datafield" data-set="'+data_set+'" data-field="'+data_field+'" data-val="'+v3[k4]+'" data-rel="'+rel+'" data-multiple="'+multiple+'" '+data_vals+'>'+getDefiniton(attr_ori,v3[k4])+'</td>';
-						}
-					});
-					template +='</tr>';
+						});
+						template +='</tr>';
 				});
 				template +='</table>';
 			}
@@ -430,57 +449,27 @@ function formAction(action,push_response){
 }
 
 function addForm(pull_response){
-	var datafield = $('.datafield');
-	var set, field, val, rel;
+	var disabledTab = []; // list of tab index to be disabled
+	var i = 0, getset, temp;
 
-	$.each(datafield, function(k,v){
-		var fetch_data = [];
-		set     = $(this).attr('data-set');
-		field   = $(this).attr('data-field');
-		val   = $(this).attr('data-val');
-		fetch_data = listData.edit[set][field];
-		// fetch_data['value'] = '';
-
-		// if lisData.edit.object.defval defined
-		if(typeof fetch_data.defval != 'undefined' && fetch_data.defval != ''){
-			$(this).attr('data-val', 0);
-			fetch_data['value'] = 0;
-			fetch_data['defval'] = fetch_data.defval;
-		} else {
-			switch(fetch_data.type){
-				case 'select':
-					rel = $(this).attr('data-rel');
-					rel = rel.split('.');
-					fetch_data['value'] = ''; // get one selected id
-					var rel_defval =[];
-					rel_defval[0] = 'Please select...';
-					$.each(pull_response[rel[0]], function(k1,v1){
-						$.each(v1, function(k2,v2){
-							if(k2.indexOf('_name') > -1){
-								rel_defval[v1.id] = v2;
-								return false;
-							}
-						});
-					});
-					fetch_data['defval'] = rel_defval;
-				break;
-				case 'text':
-					$(this).attr('data-val', fetch_data.value);
-				break;
-			}
-		}
-
-		var input = getElem(fetch_data.type,fetch_data);
-		input.on('change', function(){
-			$(this).parent().attr('data-val',$(this).val());
+	$.each(listData.details, function(k,v){
+		temp = viewDetails(listData.edit.data[v.set], v, v.type);
+		var tempObject = $(temp);
+		$('.datafield', tempObject).each(function(k1,v1){
+			var pushEl = listData.edit.data[v.set][$(v1).attr('data-field')];
+			var input = getElem(pushEl['type'],pushEl);
+			$(v1).html(input);
 		});
-		$(this).html(input);
+		console.log('tempObject',tempObject[1]);
+		$('#'+k).html(tempObject);
+		i++;
 	});
+	$('#details').tabs({disabled:disabledTab});
 }
 
 function reinit(){
 	$.ajax({
-		url: "http://10.1.66.105/wspolicy/list/all/",
+		url: "http://10.1.66.105/wspolicy2/list/all/",
 		type: "GET",
 		dataType: "json",
 		crossDomain: true,
@@ -509,7 +498,7 @@ function deleteForm(pull_response){
 		'policies':getids
 	}
 	$.ajax({
-		url: "http://10.1.66.105/wspolicy/delete/",
+		url: "http://10.1.66.105/wspolicy2/delete/",
 		type: "POST",
 		data: JSON.stringify(policy_id),
 		crossDomain: true,
@@ -526,7 +515,6 @@ function deleteForm(pull_response){
 		}
 	});   
 }
-
 
 function compileMsg(xhr, type){
 	var response = (typeof xhr == 'object')? xhr: $.parseJSON(xhr);
@@ -580,12 +568,12 @@ function editForm(pull_response){
 		} else {
 			if(fetch_data.type == 'select'){
 
-// console.log(pull_response,pull_response[set],set)
+		sconsole.log(pull_response,pull_response[set],set)
 
 				rel = $(this).attr('data-rel');
 				rel = rel.split('.');
 				fetch_data['value'] = pull_response[set][0][rel[1]]; // get one selected id
-				var rel_defval =[];
+				var rel_defval = [];
 				rel_defval[0] = 'Please select...';
 				$.each(pull_response[rel[0]], function(k1,v1){
 					$.each(v1, function(k2,v2){
@@ -608,60 +596,135 @@ function editForm(pull_response){
 }
 
 function saveForm(pull_response, type){
-	pull_response.policy_profile.id = (type == 'add')?'': pull_response.policy_profile.id;
+	console.log(pull_response, type)
+	if(type == 'add' && typeof pull_response != 'undefined'){
+		pull_response.data.id = '';
+	}
+	var id = (typeof pull_response != 'undefined')? pull_response.data.id: '';
+
 	var url ={
-		add: "http://10.1.66.105/wspolicy/add/",
-		edit: "http://10.1.66.105/wspolicy/update/"+pull_response.policy_profile.id
+		add: "http://10.1.66.105/wspolicy2/add/",
+		edit: "http://10.1.66.105/wspolicy2/update/"+id
 	}
 
-	var datafield 	= $('.datafield');
-	var message 	= $('#message');
-	var set, field, val, temp = [];
-	$.each(datafield, function(k,v){
-		var temp2 = {};
-		set		= $(v).attr('data-set');
-		field		= $(v).attr('data-field');
-		val		= $(v).attr('data-val');
-		vals		= $(v).attr('data-vals');
-		rels		= $(v).attr('data-rel');
-		rel		= rels.split('.');
-		multiple = $(v).attr('data-multiple');
-		if(multiple=='true'){
-			if(typeof temp[set] == 'undefined')
-			temp[set] = [];
-			if(val == 1){
-				temp2[rel[1]] = parseInt(vals);
-				temp[set].push(temp2);
+	if(type == 'edit'){
+		$.each($('#edit')[0], function(k,v){
+			if($(v).attr('type') == 'file'){
+				if($(v).val() == ''){
+					if($(v).attr('name').indexOf('download')){
+						var selector = $(v).attr('name').replace('_file', '_url');		
+						$('input[name="'+$(v).attr('name')+'"]').remove();
+						$('#'+selector).append($('<input type="text" name="'+$(v).attr('name')+'"/>').val($('#'+selector).attr('data-val')));
+					} else {	
+						var selector = $(v).attr('name').replace('_file', '_url');		
+						$('input[name="'+selector+'"]').remove();
+						$('#'+selector+' div').append($('<input type="text" name="'+$(v).attr('name')+'"/>').val($('#'+selector).attr('data-val')));
+					}
+				}
 			}
-			pull_response[set] = temp[set];
-		} else {
-			if(getLength(rel) >= 2){
-				pull_response[set][0][rel[1]] = parseInt(val);
-			} else {
-				pull_response[set][field] = val;
-			}
-		}
-	});
-	var pushData = JSON.stringify(pull_response);
-	$.ajax({
+		});
+	}
+
+	var formData = new FormData($('#edit')[0]);
+
+	// hack for uploading large file size
+	var jqxhr = $.ajax({
 		url: url[type],
-		type: "POST",
-		data: pushData,
-		crossDomain: true,
-		success: function(response){
-			if(response.status == 'success'){
-				reinit();
-				compileMsg(response, 'success');
+		type: 'POST',
+		done: function(response){
+			return true;
+		},
+		fail:function (xhr, ajaxOptions, thrownError){
+			compileMsg(xhr.responseText, 'error');
+			block.dialog('close');
+			return false;
+		},
+		always:function (xhr, ajaxOptions, thrownError){
+			return true;
+		},
+		data: formData,
+		cache: false,
+		contentType: false,
+		processData: false
+	});
+	jqxhr.always(function(response) {
+		if(response.status == 'success'){
+			refetch();
+			compileMsg(response, 'success');
+			setTimeout(function(){
+				location.reload();
+			}, 1000);
+		} else {
+			if(response.status == 500){
+				compileMsg('{status: "error", message: "Error 500. Contact administrator."}', 'fail');
+				block.dialog('close');
+			} else if(response.status == 400){
+				compileMsg(response, 'fail');
+				block.dialog('close');
 			} else {
 				compileMsg(response, 'fail');
+				block.dialog('close');
 			}
-			formAction('cancel');
-		},
-		error:function (xhr, ajaxOptions, thrownError){
-			compileMsg(xhr.responseText, 'error');
-			return false;
 		}
+		formAction('cancel');
 	});
+
+
+
+	// pull_response.policy_profile.id = (type == 'add')?'': pull_response.policy_profile.id;
+	// var url ={
+	// 	add: "http://10.1.66.105/wspolicy2/add/",
+	// 	edit: "http://10.1.66.105/wspolicy2/update/"+id
+	// }
+
+	// var datafield 	= $('.datafield');
+	// var message 	= $('#message');
+	// var set, field, val, temp = [];
+	// $.each(datafield, function(k,v){
+	// 	var temp2 = {};
+	// 	set		= $(v).attr('data-set');
+	// 	field		= $(v).attr('data-field');
+	// 	val		= $(v).attr('data-val');
+	// 	vals		= $(v).attr('data-vals');
+	// 	rels		= $(v).attr('data-rel');
+	// 	rel		= rels.split('.');
+	// 	multiple = $(v).attr('data-multiple');
+	// 	if(multiple=='true'){
+	// 		if(typeof temp[set] == 'undefined')
+	// 		temp[set] = [];
+	// 		if(val == 1){
+	// 			temp2[rel[1]] = parseInt(vals);
+	// 			temp[set].push(temp2);
+	// 		}
+	// 		pull_response[set] = temp[set];
+	// 	} else {
+	// 		if(getLength(rel) >= 2){
+	// 			pull_response[set][0][rel[1]] = parseInt(val);
+	// 		} else {
+	// 			pull_response[set][field] = val;
+	// 		}
+	// 	}
+	// });
+	// var pushData = JSON.stringify(pull_response);
+	// $.ajax({
+	// 	url: url[type],
+	// 	type: "POST",
+	// 	data: pushData,
+	// 	crossDomain: true,
+	// 	success: function(response){
+	// 		if(response.status == 'success'){
+	// 			reinit();
+	// 			compileMsg(response, 'success');
+	// 		} else {
+	// 			compileMsg(response, 'fail');
+	// 		}
+	// 		formAction('cancel');
+	// 	},
+	// 	error:function (xhr, ajaxOptions, thrownError){
+	// 		compileMsg(xhr.responseText, 'error');
+	// 		return false;
+	// 	}
+	// });
 }
 
 function cancelForm(type){
@@ -671,10 +734,52 @@ function cancelForm(type){
 		reinit();
 	}
 }
+
+function getLocation(){	
+	var get_data = $.ajax({
+		url: "http://10.1.66.105/wsgeofence/list/all/",
+		type: "GET",
+		dataType: "json",
+		crossDomain: true,
+		async: false,
+		beforeSend: function(xhr){}
+	}).success(function(response) {
+	});
+	var temp = {};
+	$.each(get_data.responseJSON.data, function(k,v){
+		temp[v.id] = v.location_name;
+	});
+	return temp;
+}
+
+function getEditVal(url, target){	
+	var get_data = $.ajax({
+		url: url,
+		type: "GET",
+		dataType: "json",
+		crossDomain: true,
+		async: false,
+		beforeSend: function(xhr){}
+	}).success(function(response) {
+	});
+	var temp = {};
+	$.each(get_data.responseJSON.data, function(k,v){
+		temp[v[target]] = {name: v[target], type: 'toggle', value:v.id, defval:toggle_enable};
+	});
+	return temp;
+}
+
 // Form Editor End
 
 // user-defined attribute
 var toggle_enable = {0:'Disabled', 1:'Enabled'};
+var location_name = getLocation();
+var apps_name = getEditVal("http://10.1.66.105/wsapp/list/all/", 'alias');
+var wifi_name = getEditVal("http://10.1.66.105/wspolicy2/list/wifi/", 'ssid');
+console.log(wifi_name)
+
+
+
 var listData = {
 	'details': {        
 		'general':{
@@ -739,7 +844,7 @@ var listData = {
 				}
 			},
 			set: 'policy_location_profile',
-			rel: 'location_list.location_id',
+			rel: 'location_list.id',
 			type: 'dd'
 		},
 		'network':{
@@ -809,98 +914,104 @@ var listData = {
 		}
 	},
 	'edit': {
-		'blacklist_app_list': {
-			'api_key': {name: 'api_key', type: 'text', value:''},
-			'app_identifier': {name: 'app_identifier', type: 'text', value:''},
-			'app_name': {name: 'app_name', type: 'text', value:''},
-			'created_at': {name: 'created_at', type: 'hidden', value:''},
-			'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
-			'platform_id': {name: 'platform_id', type: 'text', value:''},
-			'push_val': {name: 'push_val', type: 'toggle', value:'', defval:toggle_enable},
-			'updated_at': {name: 'updated_at', type: 'hidden', value:''}
-		},
-		'location_list': {
-			'created_at': {name: 'created_at', type: 'hidden', value:''},
-			'floor_no': {name: 'floor_no', type: 'text', value:''},
-			'id': {name: 'id', type: 'text', value:''},
-			'lat_lng_string': {name: 'lat_lng_string', type: 'text', value:''},
-			'location_name': {name: 'location_name', type: 'select', value:'', defval:''},
-			'location_status': {name: 'location_status', type: 'text', value:''},
-			'updated_at': {name: 'updated_at', type: 'hidden', value:''}
-		},
-		'policy_location_blacklist_app': {
-			'created_at': {name: 'created_at', type: 'hidden', value:''},
-			'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
-			'policy_app_id': {name: 'policy_app_id', type: 'text', value:''},
-			'policy_location_id': {name: 'policy_location_id', type: 'text', value:''},
-			'profile_id': {name: 'profile_id', type: 'text', value:''},
-			'updated_at': {name: 'updated_at', type: 'hidden', value:''}
-		},
-		'policy_location_profile': {
-			'created_at': {name: 'created_at', type: 'hidden', value:''},
-			'id': {name: 'id', type: 'select', value:''},
-			'location_id': {name: 'location_id', type: 'text', value:''},
-			'location_name': {name: 'location_name', type: 'text', value:''},
-			'policy_gl_status': {name: 'policy_gl_status', type: 'text', value:''},
-			'profile': {name: 'profile', type: 'text', value:''},
-			'updated_at': {name: 'updated_at', type: 'hidden', value:''}
-		},
-		'policy_passcode': {
-			'alphanumeric': {name: 'alphanumeric', type: 'toggle', value:'', defval:toggle_enable},
-			'auto_lock': {name: 'auto_lock', type: 'select', value:'', defval:{0:0,1:1,2:2,3:3,4:4,5:5,10:10,15:15}},
-			'created_at': {name: 'created_at', type: 'toggle', value:'', defval:toggle_enable},
-			'grace_period': {name: 'grace_period', type: 'toggle', value:'', defval:toggle_enable},
-			'history': {name: 'history', type: 'text', value:0},
-			'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
-			'max_age': {name: 'max_age', type: 'text', value:0},
-			'max_fail': {name: 'max_fail', type: 'select', value:'', defval:{0:0,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11}},
-			'min_complex_char': {name: 'min_complex_char', type: 'select', value:'', defval:{0:0,1:1,2:2,3:3,4:4,5:5}},
-			'min_length': {name: 'min_length', type: 'select', value:'', defval:{0:0,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11,12:12,13:13,14:14,15:15,16:16}},
-			'payload_uuid': {name: 'payload_uuid', type: 'toggle', value:'', defval:toggle_enable},
-			'profile_id': {name: 'profile_id', type: 'toggle', value:'', defval:toggle_enable},
-			'simple': {name: 'simple', type: 'toggle', value:'', defval:toggle_enable},
-			'updated_at': {name: 'updated_at', type: 'toggle', value:'', defval:toggle_enable}
-		},
-		'policy_profile': {
-			'allow_compromised_device': {name: 'allow_compromised_device', type: 'text', value:''},
-			'allow_remote_locate': {name: 'allow_remote_locate', type: 'toggle', value:'', defval:toggle_enable},
-			'allow_remote_lock_factory_reset': {name: 'allow_remote_lock_factory_reset', type: 'toggle', value:'', defval:toggle_enable},
-			'call_logging': {name: 'call_logging', type: 'toggle', value:'', defval:toggle_enable},
-			'created_at': {name: 'created_at', type: 'hidden', value:''},
-			'description': {name: 'description', type: 'text', value:''},
-			'id': {name: 'id', type: 'text', value:''},
-			'identifier': {name: 'identifier', type: 'text', value:''},
-			'org_name': {name: 'org_name', type: 'text', value:''},
-			'ownership_type': {name: 'ownership_type', type: 'text', value:''},
-			'profile_name': {name: 'profile_name', type: 'text', value:''},
-			'sms_logging': {name: 'sms_logging', type: 'toggle', value:'', defval:toggle_enable},
-			'status': {name: 'status', type: 'text', value:''},
-			'type': {name: 'type', type: 'text', value:''},
-			'updated_at': {name: 'updated_at', type: 'hidden', value:''}
-		},
-		'policy_vpn': {
-			'created_at': {name: 'created_at', type: 'hidden', value:''},
-			'id': {name: 'id', type: 'text', value:''},
-			'policy_gv_status': {name: 'policy_gv_status', type: 'text', value:''},
-			'profile_id': {name: 'profile_id', type: 'text', value:''},
-			'updated_at': {name: 'updated_at', type: 'hidden', value:''}
-		},
-		'policy_wifi': {
-			'ap_name': {name: 'ap_name', type: 'select', value:''},
-			'created_at': {name: 'created_at', type: 'hidden', value:''},
-			'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
-			'policy_gw_status': {name: 'policy_gw_status', type: 'text', value:''},
-			'profile': {name: 'profile', type: 'text', value:''},
-			'updated_at': {name: 'updated_at', type: 'hidden', value:''}
-		},
-		'wifi_access_points_list': {
-			'ap_name': {name: 'ap_name', type: 'text', value:''},
-			'ap_status': {name: 'ap_status', type: 'text', value:''},
-			'created_at': {name: 'created_at', type: 'hidden', value:''},
-			'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
-			'location_id': {name: 'location_id', type: 'text', value:''},
-			'mac_address': {name: 'mac_address', type: 'text', value:''},
-			'updated_at': {name: 'updated_at', type: 'hidden', value:''}
-		}
+		'data': {
+			'blacklist_app_list': {
+				'api_key': {name: 'api_key', type: 'text', value:''},
+				'app_identifier': {name: 'app_identifier', type: 'text', value:''},
+				'app_name': {name: 'app_name', type: 'text', value:''},
+				'created_at': {name: 'created_at', type: 'hidden', value:''},
+				'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
+				'platform_id': {name: 'platform_id', type: 'text', value:''},
+				'push_val': {name: 'push_val', type: 'toggle', value:'', defval:toggle_enable},
+				'updated_at': {name: 'updated_at', type: 'hidden', value:''}
+			},
+			'location_list': {
+				'created_at': {name: 'created_at', type: 'hidden', value:''},
+				'floor_no': {name: 'floor_no', type: 'text', value:''},
+				'id': {name: 'id', type: 'text', value:''},
+				'lat_lng_string': {name: 'lat_lng_string', type: 'text', value:''},
+				'location_name': {name: 'location_name', type: 'select', value:'', defval:''},
+				'location_status': {name: 'location_status', type: 'text', value:''},
+				'updated_at': {name: 'updated_at', type: 'hidden', value:''}
+			},
+			// 'policy_location_blacklist_app': {
+			// 	'created_at': {name: 'created_at', type: 'hidden', value:''},
+			// 	'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
+			// 	'policy_app_id': {name: 'policy_app_id', type: 'text', value:''},
+			// 	'policy_location_id': {name: 'policy_location_id', type: 'text', value:''},
+			// 	'profile_id': {name: 'profile_id', type: 'text', value:''},
+			// 	'updated_at': {name: 'updated_at', type: 'hidden', value:''}
+			// },
+			'policy_location_blacklist_app': apps_name,
+			'policy_location_profile': {
+				'created_at': {name: 'created_at', type: 'hidden', value:''},
+				'id': {name: 'id', type: 'select', value:''},
+				'location_id': {name: 'location_id', type: 'text', value:''},
+
+				'location_name': {name: 'location_name', type: 'select', value:'', defval:location_name},
+
+				'policy_gl_status': {name: 'policy_gl_status', type: 'text', value:''},
+				'profile': {name: 'profile', type: 'text', value:''},
+				'updated_at': {name: 'updated_at', type: 'hidden', value:''}
+			},
+			'policy_passcode': {
+				'alphanumeric': {name: 'alphanumeric', type: 'toggle', value:'', defval:toggle_enable},
+				'auto_lock': {name: 'auto_lock', type: 'select', value:'', defval:{0:0,1:1,2:2,3:3,4:4,5:5,10:10,15:15}},
+				'created_at': {name: 'created_at', type: 'hidden', value:''},
+				'grace_period': {name: 'grace_period', type: 'toggle', value:'', defval:toggle_enable},
+				'history': {name: 'history', type: 'text', value:0},
+				'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
+				'max_age': {name: 'max_age', type: 'text', value:0},
+				'max_fail': {name: 'max_fail', type: 'select', value:'', defval:{0:0,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11}},
+				'min_complex_char': {name: 'min_complex_char', type: 'select', value:'', defval:{0:0,1:1,2:2,3:3,4:4,5:5}},
+				'min_length': {name: 'min_length', type: 'select', value:'', defval:{0:0,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11,12:12,13:13,14:14,15:15,16:16}},
+				'payload_uuid': {name: 'payload_uuid', type: 'toggle', value:'', defval:toggle_enable},
+				'profile_id': {name: 'profile_id', type: 'toggle', value:'', defval:toggle_enable},
+				'simple': {name: 'simple', type: 'toggle', value:'', defval:toggle_enable},
+				'updated_at': {name: 'updated_at', type: 'hidden', value:''}
+			},
+			'policy_profile': {
+				'allow_compromised_device': {name: 'allow_compromised_device', type: 'text', value:''},
+				'allow_remote_locate': {name: 'allow_remote_locate', type: 'toggle', value:'', defval:toggle_enable},
+				'allow_remote_lock_factory_reset': {name: 'allow_remote_lock_factory_reset', type: 'toggle', value:'', defval:toggle_enable},
+				'call_logging': {name: 'call_logging', type: 'toggle', value:'', defval:toggle_enable},
+				'created_at': {name: 'created_at', type: 'hidden', value:''},
+				'description': {name: 'description', type: 'textarea', value:''},
+				'id': {name: 'id', type: 'text', value:''},
+				'identifier': {name: 'identifier', type: 'text', value:''},
+				'org_name': {name: 'org_name', type: 'text', value:''},
+				'ownership_type': {name: 'ownership_type', type: 'text', value:''},
+				'profile_name': {name: 'profile_name', type: 'text', value:''},
+				'sms_logging': {name: 'sms_logging', type: 'toggle', value:'', defval:toggle_enable},
+				'status': {name: 'status', type: 'text', value:''},
+				'type': {name: 'type', type: 'text', value:''},
+				'updated_at': {name: 'updated_at', type: 'hidden', value:''}
+			},
+			'policy_vpn': {
+				'created_at': {name: 'created_at', type: 'hidden', value:''},
+				'id': {name: 'id', type: 'text', value:''},
+				'policy_gv_status': {name: 'policy_gv_status', type: 'text', value:''},
+				'profile_id': {name: 'profile_id', type: 'text', value:''},
+				'updated_at': {name: 'updated_at', type: 'hidden', value:''}
+			},
+			// 'policy_wifi': {
+			// 	'ap_name': {name: 'ap_name', type: 'toggle', value:'', defval:toggle_enable}
+			// 	// 'created_at': {name: 'created_at', type: 'hidden', value:''},
+			// 	// 'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
+			// 	// 'policy_gw_status': {name: 'policy_gw_status', type: 'text', value:''},
+			// 	// 'profile': {name: 'profile', type: 'text', value:''},
+			// 	// 'updated_at': {name: 'updated_at', type: 'hidden', value:''}
+			// },
+			'policy_wifi': wifi_name,
+			'wifi_access_points_list': {
+				'ap_name': {name: 'ap_name', type: 'text', value:''},
+				'ap_status': {name: 'ap_status', type: 'text', value:''},
+				'created_at': {name: 'created_at', type: 'hidden', value:''},
+				'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
+				'location_id': {name: 'location_id', type: 'text', value:''},
+				'mac_address': {name: 'mac_address', type: 'text', value:''},
+				'updated_at': {name: 'updated_at', type: 'hidden', value:''}
+			}
+		}			
 	}
 }

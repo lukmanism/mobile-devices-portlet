@@ -2,20 +2,20 @@
 <html>
 <head>
     <title></title>
-    <link href="http://code.jquery.com/ui/1.11.0/themes/smoothness/jquery-ui.css" rel="stylesheet">
+    <link href="http://localhost/cdn/jquery/smoothness/jquery-ui.css" rel="stylesheet">
      
-	<link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.common.min.css" rel="stylesheet" />
-    <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.default.min.css" rel="stylesheet" />
-    <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.dataviz.min.css" rel="stylesheet" /> 
-    <link href="http://cdn.kendostatic.com/2014.1.528/styles/kendo.dataviz.default.min.css" rel="stylesheet" />
+	<link href="http://localhost/cdn/jquery/kendo.common.min.css" rel="stylesheet" />
+    <link href="http://localhost/cdn/jquery/kendo.default.min.css" rel="stylesheet" />
+    <link href="http://localhost/cdn/jquery/kendo.dataviz.min.css" rel="stylesheet" /> 
+    <link href="http://localhost/cdn/jquery/kendo.dataviz.default.min.css" rel="stylesheet" />
 
     <link href="css/policies_list.css" rel="stylesheet" />
     <link href="../details/css/policies_details.css" rel="stylesheet" />
     <link href="../details/css/toggles.css" rel="stylesheet" />
 
-    <script src="http://cdn.kendostatic.com/2014.1.528/js/jquery.min.js"></script>
-    <script src="http://code.jquery.com/ui/1.11.0/jquery-ui.js"></script>
-    <script src="http://cdn.kendostatic.com/2014.1.528/js/kendo.all.min.js"></script>
+	<script src="http://localhost/cdn/jquery/jquery.min.js"></script>
+    <script src="http://localhost/cdn/jquery/jquery-ui.js"></script>
+    <script src="http://localhost/cdn/jquery/kendo.all.min.js"></script>
     <script src="../../../js/definition.js"></script>
     <script src="../../../js/toggles.min.js"></script>
     <script src="../../../js/include_policies.js"></script>
@@ -72,7 +72,7 @@
 <script>
     $(document).ready(function() {
 		$.ajax({
-			url: "http://10.1.66.105/wspolicy/list/all/",
+			url: "http://10.1.66.105/wspolicy2/list/all/",
 			type: "GET",
 			dataType: "json",
 			crossDomain: true,
@@ -80,9 +80,12 @@
 		}).success(function(response) {
 			var list = getList(response);
 			pushTable(list, listData.list.policy.policy_management);
-            getMoreDetails(response.data[0]['id'])  
+			if(typeof response.data[0] == 'undefined'){
+				getMoreDetails();
+			} else {
+				getMoreDetails(response.data[0]['id']);
+			}
 		});
-
 	});
 </script>
 </body>
