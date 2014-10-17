@@ -222,7 +222,8 @@ function getElem(type,val){
 		case 'radio':
 		case 'password':
 		case 'hidden':
-			form_row = $('<input '+properties+'/>').attr('type', type).attr('name', val.name).val(val.value)
+			var set = (typeof val.set != 'undefined')? val.set: '';
+			form_row = $('<input '+properties+'/>').attr('type', type).attr('name', val.name).attr('data-set', set).val(val.value)
 		break;
 		case 'date':
 			form_row = $('<input '+properties+'/>').datepicker({ dateFormat: 'yy-mm-dd' }).val(val.value);
@@ -233,20 +234,41 @@ function getElem(type,val){
 		break;
 
 		case 'toggle':
-		// console.log(val.name,val)
-		toggle_status = (val.value == 0)? false: true;
-			form_row = $('<div class="toggle"/>').toggles({   
+
+			toggle_status = (val.value == 0)? false: true;
+
+			if(val.multiple){
+				toggle_status = false;
+				var data_id = 'data-id="'+val.id+'"';
+			} else {
+				var data_id = '';
+			}
+
+						// console.log('data_id',data_id)
+			form_row = $('<div class="toggle" '+data_id+'/>').toggles({   
 				drag: false,
 				on: toggle_status,
 				width: 90,
 				text:{on: val.defval[1],off: val.defval[0]}
 			}).on('toggle', function(e,active){
+				var parent = $(this).parent();
+				var target = $('input[name='+val.name+']', parent);
+
+		
 				if (active) {
-					$(this).parent().attr('data-val',1);
+					if(val.multiple) {
+						var data_vals = $(this).attr('data-id');
+						// console.log(val.name,target,data_vals)
+						target.val(data_vals)
+					} else {
+						target.val(1);
+					}
 				} else {
-					$(this).parent().attr('data-val',0);
+					target.val(0);
 				}
 			});
+
+			form_row.append(getElem('hidden',val)) // append hidden input
 		break;
 
 		case 'select':
@@ -347,7 +369,7 @@ function viewDetails(data, setlist, type){
 		template +='<span class="sub_tab_title">'+v.name+'</span>';
 		if(typeof data != 'undefined'){
 			data_set = (getLength(setlist.set) >= 1)?setlist.set[0]: setlist.set;
-			rel = setlist.rel;
+			rel = (typeof setlist.rel == 'undefined')? '': setlist.rel;
 			if(type != 'table'){ // check if table=true or null
 				template += '<dl>';
 					$.each(v.list, function(k2,v2){
@@ -364,9 +386,10 @@ function viewDetails(data, setlist, type){
 							data_field = k2;
 							attr = (typeof getDefiniton(k2,attr_ori) != 'undefined')? getDefiniton(k2,attr_ori): attr_ori;
 						}
+						// console.log(typeof attr_ori, attr_ori.value,attr_ori)
 						data_vals = (multiple)? 'data-vals="'+v2['id']+'"': '';
 						template +='<dt>'+v2+'</dt>';
-						template +='<dd class="datafield" data-set="'+data_set+'" data-field="'+data_field+'" data-val="'+attr_ori+'" data-rel="'+rel+'" data-multiple="'+multiple+'" '+data_vals+'>'+attr+'</dd>';
+						template +='<dd class="datafield" data-set="'+data_set+'" data-field="'+data_field+'" data-val="'+attr_ori.value+'" data-rel="'+rel+'" data-multiple="'+multiple+'" '+data_vals+'>'+attr+'</dd>';
 					});
 				template +='</dl>';
 			} else {
@@ -375,6 +398,7 @@ function viewDetails(data, setlist, type){
 				$.each(v.list, function(k4,v4){
 					template +='<th>'+v4+'</th>';
 				});
+				var get_key = Object.keys(v.list);
 				template +='</tr>';
 				$.each(data, function(k3,v3){
 					template +='<tr>';
@@ -398,7 +422,7 @@ function viewDetails(data, setlist, type){
 								// first time edit
 								if(k4 != 'push_val'){
 									template +='<td>'+v3.name+'</td>';
-									template +='<td class="datafield" data-set="" data-field="'+v3.name+'" data-val="" data-rel=""></td>';
+									template +='<td class="datafield" data-set="'+data_set+'" data-field="'+v3.name+'" data-val="0" data-rel="'+k4+'" data-multiple="true"></td>';
 								}
 							}
 						});
@@ -410,6 +434,7 @@ function viewDetails(data, setlist, type){
 			template +='<p class="message">'+v.ifEmpty+'</p>';
 		}
 	});
+
 	return template;
 }
 
@@ -449,22 +474,37 @@ function formAction(action,push_response){
 }
 
 function addForm(pull_response){
+	wrapForm();
 	var disabledTab = []; // list of tab index to be disabled
-	var i = 0, getset, temp;
+	var i = 0, getset, temp, data_rel = '';
 
 	$.each(listData.details, function(k,v){
 		temp = viewDetails(listData.edit.data[v.set], v, v.type);
 		var tempObject = $(temp);
 		$('.datafield', tempObject).each(function(k1,v1){
 			var pushEl = listData.edit.data[v.set][$(v1).attr('data-field')];
+
+
+			if(pushEl.multiple){
+				pushEl.id = pushEl.value; // reset value first time load
+				pushEl.value = 0; // reset value first time load
+				pushEl.set = $(v1).attr('data-set'); // reset value first time load
+				pushEl.name = (data_rel != $(v1).attr('data-rel'))? $(v1).attr('data-rel'): data_rel;
+			}
+	// console.log(pushEl)
+
 			var input = getElem(pushEl['type'],pushEl);
+
 			$(v1).html(input);
 		});
-		console.log('tempObject',tempObject[1]);
 		$('#'+k).html(tempObject);
 		i++;
 	});
 	$('#details').tabs({disabled:disabledTab});
+}
+
+function wrapForm(){
+	$('#details').wrap('<form id="edit"/>');
 }
 
 function reinit(){
@@ -545,7 +585,8 @@ function compileMsg(xhr, type){
 	} else {
 		message.append($('<li/>').html(response.message));
 	}
-	$('#message').append(message).show().fadeOut(9000);
+	$('#message').append(message).show();
+	// $('#message').append(message).show().fadeOut(9000);
 }
 
 function editForm(pull_response){
@@ -596,7 +637,6 @@ function editForm(pull_response){
 }
 
 function saveForm(pull_response, type){
-	console.log(pull_response, type)
 	if(type == 'add' && typeof pull_response != 'undefined'){
 		pull_response.data.id = '';
 	}
@@ -609,6 +649,7 @@ function saveForm(pull_response, type){
 
 	if(type == 'edit'){
 		$.each($('#edit')[0], function(k,v){
+		console.log('formData',k,v)
 			if($(v).attr('type') == 'file'){
 				if($(v).val() == ''){
 					if($(v).attr('name').indexOf('download')){
@@ -623,51 +664,206 @@ function saveForm(pull_response, type){
 				}
 			}
 		});
-	}
+	} else { // add
+		// var name = '';
+		// var temp_el = [];
+		// var push_form = $('#edit')[0];
+		// var temp_val;
+		// $.each(push_form, function(k1,v1){
+		// 	var data_set = $(v1).attr('data-set');
+		// 	if(typeof data_set != 'undefined' && data_set != ''){
+		// 		if(typeof temp_el[data_set] == 'undefined') temp_el[data_set] = [];
+		// 	// console.log(data_set, $(v1).val())
+		// 		delete $(push_form)[0][k1];
+		// 		if(parseInt($(v1).val()) != 0)
+		// 		temp_el[data_set].push(parseInt($(v1).val()))
+		// 	}
+		// });
+		// 	console.log(temp_el)
 
-	var formData = new FormData($('#edit')[0]);
 
-	// hack for uploading large file size
-	var jqxhr = $.ajax({
-		url: url[type],
-		type: 'POST',
-		done: function(response){
-			return true;
-		},
-		fail:function (xhr, ajaxOptions, thrownError){
-			compileMsg(xhr.responseText, 'error');
-			block.dialog('close');
-			return false;
-		},
-		always:function (xhr, ajaxOptions, thrownError){
-			return true;
-		},
-		data: formData,
-		cache: false,
-		contentType: false,
-		processData: false
-	});
-	jqxhr.always(function(response) {
-		if(response.status == 'success'){
-			refetch();
-			compileMsg(response, 'success');
-			setTimeout(function(){
-				location.reload();
-			}, 1000);
-		} else {
-			if(response.status == 500){
-				compileMsg('{status: "error", message: "Error 500. Contact administrator."}', 'fail');
-				block.dialog('close');
-			} else if(response.status == 400){
-				compileMsg(response, 'fail');
-				block.dialog('close');
+		// for (var key in temp_el) {
+		// 	temp_val = {name: key, type: 'text', value:JSON.stringify(temp_el[key])}
+		// 	$(push_form).append(getElem('text',temp_val))
+		// }
+		// console.log('temp_el', temp_el, $(push_form)[0])
+		// console.log('push_form', $(push_form)[0])
+
+
+		// var post_val = [];
+		// $.each(listData.edit.data, function(k3,v3){
+		// 	// console.log(k3,v3)
+		// 	if(typeof post_val[k3] == 'undefined') post_val[k3] = [];
+		// 	$.each(v3, function(k4,v4){
+		// 		if(typeof post_val[k3][k4] == 'undefined') post_val[k3][k4] = [];
+		// 		var el = $(push_form)[0][k4];
+		// 		var el_val =  $(el).val()	
+
+		// 		// console.log(k3,k4, $(el).val())
+
+
+		// 	if(typeof $(el).attr('data_set') != 'undefined' && $(el).attr('data_set') != ''){
+		// 		// post_val[k3][k4] = $(el).val()
+		// 		// console.log(k3,k4, $(el).val())
+		// 		el_val = JSON.stringify(temp_el[key])
+		// 	} else {
+		// 		post_val[k3][k4] = el_val				
+		// 	}				
+		// 	})
+		// })
+
+
+
+
+	// console.log('post_val',post_val)
+	// console.log(pull_response, type)
+	// pull_response.id = (type == 'add')?'': pull_response.id;
+	// var url ={
+	// 	add: "http://10.1.66.105/wsgeofence/add/",
+	// 	edit: "http://10.1.66.105/wsgeofence/update/"+pull_response.id
+	// }
+
+	// var datafield 	= $('.datafield');
+	// var message 	= $('#message');
+	// var set, field, val, temp = {};
+	// temp['id'] = "";
+	// $.each(datafield, function(k,v){
+	// 	set		= $(v).attr('data-set');
+	// 	field	= $(v).attr('data-field');
+	// 	val		= $(v).attr('data-val');
+	// 	temp[field] = val;
+	// });
+
+
+	var gettemp = {}
+	$.each(listData.details, function(k,v){
+		// console.log(k,v)
+		if(typeof gettemp[v.set] == 'undefined') gettemp[v.set] = {}
+		$.each(v.data, function(k1,v1){
+			var tempset = {}
+			$.each(v1.list, function(k2,v2){
+				if(typeof gettemp[v.set][k2] != 'undefined') gettemp[v.set][k2] = []
+				var el = $('[name="'+k2+'"]');
+		// console.log(v.set,k2)
+				if(el.length == 1){
+					var val = $('[name="'+k2+'"]').val();
+					// tempset[k2] = val
+					gettemp[v.set][k2] = val;
+					// console.log(gettemp, tempset)
+				} else if(el.length > 1){
+		// console.log(k1)
+					var tempsubset = [];
+					$.each(el, function(k3,v3){
+						var val = $(v3).val();
+						if(val != 0){
+							tempsubset.push(parseInt(val));
+						}
+					});
+					// console.log(k2, JSON.stringify(tempsubset))
+					// tempset[k2] = tempsubset;
+					gettemp[v.set][k2] = tempsubset;
+				}
+		// console.log(v.set, gettemp,tempset)
+			})
+		})
+	})
+	// console.log(JSON.stringify(gettemp))
+
+	// return false
+
+// 	var pushData = {"policy_profile":{"profile_name":"gettemp","description":"gettemp","org_name":"gettemp","identifier":"gettemp","created_at":"","updated_at":"","call_logging":"1","sms_logging":"1","allow_remote_locate":"1","allow_remote_lock_factory_reset":"1"},"policy_passcode":{"simple":"1","alphanumeric":"1","min_length":"0","min_complex_char":"0","max_age":"0","auto_lock":"0","history":"0","max_fail":"0"},"policy_wifi":{"wifi_id":[2,1]},"policy_location_profile":{"location_name":"16"},"policy_location_blacklist_app":{"policy_app_id":[89,87,86,85,84,83,82,81,80,61,59,56,55]}}
+
+
+// {"policy_profile":{"profile_name":"gettemp","description":"gettemp","org_name":"gettemp","identifier":"gettemp","created_at":"","updated_at":"","call_logging":"1","sms_logging":"1","allow_remote_locate":"1","allow_remote_lock_factory_reset":"1","status":1, "allow_compromised_device":1, "type":"adhoc"},
+// "policy_passcode":{"simple":"1","alphanumeric":"1","min_length":"0","min_complex_char":"0","max_age":"0","auto_lock":"0","history":"0","max_fail":"0","grace_period":1},
+// "policy_wifi":[{"wifi_id":2},{"wifi_id":1}],
+// "policy_location_profile":[{"location_id":2},{"location_id":1}],
+// "policy_location_blacklist_app":[{"policy_app_id":89},{"policy_app_id":87}],
+// "location_list": [],
+// "wifi_access_points_list": [],
+// "blacklist_app_list": []
+// }
+	
+
+	var pushData = JSON.stringify(gettemp);
+	// 		console.log('pushData', pushData, gettemp)
+
+	$.ajax({
+		url: 'http://10.1.66.105/wspolicy2/add/',
+		type: "POST",
+		data: pushData,
+		crossDomain: true,
+		success: function(response){
+			if(response.status == 'success'){
+				reinit();
+				compileMsg(response, 'success');
 			} else {
 				compileMsg(response, 'fail');
-				block.dialog('close');
 			}
+			formAction('cancel');
+		},
+		error:function (xhr, ajaxOptions, thrownError){
+			compileMsg(xhr.responseText, 'error');
+			return false;
 		}
-		formAction('cancel');
 	});
+
+	}
+
+
+
+
+
+
+
+
+
+	// var formData = new FormData($('#edit')[0]);
+	// console.log(formData)
+
+	// return false
+
+	// hack for uploading large file size
+	// var jqxhr = $.ajax({
+	// 	url: url[type],
+	// 	type: 'POST',
+	// 	done: function(response){
+	// 		return true;
+	// 	},
+	// 	fail:function (xhr, ajaxOptions, thrownError){
+	// 		compileMsg(xhr.responseText, 'error');
+	// 		block.dialog('close');
+	// 		return false;
+	// 	},
+	// 	always:function (xhr, ajaxOptions, thrownError){
+	// 		return true;
+	// 	},
+	// 	data: formData,
+	// 	cache: false,
+	// 	contentType: false,
+	// 	processData: false
+	// });
+	// jqxhr.always(function(response) {
+	// 	if(response.status == 'success'){
+	// 		refetch();
+	// 		compileMsg(response, 'success');
+	// 		setTimeout(function(){
+	// 			location.reload();
+	// 		}, 1000);
+	// 	} else {
+	// 		if(response.status == 500){
+	// 			compileMsg('{status: "error", message: "Error 500. Contact administrator."}', 'fail');
+	// 			block.dialog('close');
+	// 		} else if(response.status == 400){
+	// 			compileMsg(response, 'fail');
+	// 			block.dialog('close');
+	// 		} else {
+	// 			compileMsg(response, 'fail');
+	// 			block.dialog('close');
+	// 		}
+	// 	}
+	// 	formAction('cancel');
+	// });
 
 
 
@@ -764,7 +960,7 @@ function getEditVal(url, target){
 	});
 	var temp = {};
 	$.each(get_data.responseJSON.data, function(k,v){
-		temp[v[target]] = {name: v[target], type: 'toggle', value:v.id, defval:toggle_enable};
+		temp[v[target]] = {name: v[target], type: 'toggle', value:v.id, defval:toggle_enable, multiple:true};
 	});
 	return temp;
 }
@@ -774,11 +970,16 @@ function getEditVal(url, target){
 // user-defined attribute
 var toggle_enable = {0:'Disabled', 1:'Enabled'};
 var location_name = getLocation();
+// var location_name = getEditVal("http://10.1.66.105/wsgeofence/list/all/", 'location_name');
 var apps_name = getEditVal("http://10.1.66.105/wsapp/list/all/", 'alias');
 var wifi_name = getEditVal("http://10.1.66.105/wspolicy2/list/wifi/", 'ssid');
-console.log(wifi_name)
+// console.log(wifi_name)
 
-
+var key_id = {
+	policy_wifi: "wifi_id",
+	policy_apps: "policy_app_id",
+	policy_location: "location_id"
+}
 
 var listData = {
 	'details': {        
@@ -920,9 +1121,9 @@ var listData = {
 				'app_identifier': {name: 'app_identifier', type: 'text', value:''},
 				'app_name': {name: 'app_name', type: 'text', value:''},
 				'created_at': {name: 'created_at', type: 'hidden', value:''},
-				'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
+				'id': {name: 'id', type: 'toggle', value:0, defval:toggle_enable},
 				'platform_id': {name: 'platform_id', type: 'text', value:''},
-				'push_val': {name: 'push_val', type: 'toggle', value:'', defval:toggle_enable},
+				'push_val': {name: 'push_val', type: 'toggle', value:0, defval:toggle_enable},
 				'updated_at': {name: 'updated_at', type: 'hidden', value:''}
 			},
 			'location_list': {
@@ -936,7 +1137,7 @@ var listData = {
 			},
 			// 'policy_location_blacklist_app': {
 			// 	'created_at': {name: 'created_at', type: 'hidden', value:''},
-			// 	'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
+			// 	'id': {name: 'id', type: 'toggle', value:0, defval:toggle_enable},
 			// 	'policy_app_id': {name: 'policy_app_id', type: 'text', value:''},
 			// 	'policy_location_id': {name: 'policy_location_id', type: 'text', value:''},
 			// 	'profile_id': {name: 'profile_id', type: 'text', value:''},
@@ -947,34 +1148,32 @@ var listData = {
 				'created_at': {name: 'created_at', type: 'hidden', value:''},
 				'id': {name: 'id', type: 'select', value:''},
 				'location_id': {name: 'location_id', type: 'text', value:''},
-
 				'location_name': {name: 'location_name', type: 'select', value:'', defval:location_name},
-
 				'policy_gl_status': {name: 'policy_gl_status', type: 'text', value:''},
 				'profile': {name: 'profile', type: 'text', value:''},
 				'updated_at': {name: 'updated_at', type: 'hidden', value:''}
 			},
 			'policy_passcode': {
-				'alphanumeric': {name: 'alphanumeric', type: 'toggle', value:'', defval:toggle_enable},
+				'alphanumeric': {name: 'alphanumeric', type: 'toggle', value:0, defval:toggle_enable},
 				'auto_lock': {name: 'auto_lock', type: 'select', value:'', defval:{0:0,1:1,2:2,3:3,4:4,5:5,10:10,15:15}},
 				'created_at': {name: 'created_at', type: 'hidden', value:''},
-				'grace_period': {name: 'grace_period', type: 'toggle', value:'', defval:toggle_enable},
+				'grace_period': {name: 'grace_period', type: 'toggle', value:0, defval:toggle_enable},
 				'history': {name: 'history', type: 'text', value:0},
-				'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
+				'id': {name: 'id', type: 'toggle', value:0, defval:toggle_enable},
 				'max_age': {name: 'max_age', type: 'text', value:0},
 				'max_fail': {name: 'max_fail', type: 'select', value:'', defval:{0:0,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11}},
 				'min_complex_char': {name: 'min_complex_char', type: 'select', value:'', defval:{0:0,1:1,2:2,3:3,4:4,5:5}},
 				'min_length': {name: 'min_length', type: 'select', value:'', defval:{0:0,4:4,5:5,6:6,7:7,8:8,9:9,10:10,11:11,12:12,13:13,14:14,15:15,16:16}},
-				'payload_uuid': {name: 'payload_uuid', type: 'toggle', value:'', defval:toggle_enable},
-				'profile_id': {name: 'profile_id', type: 'toggle', value:'', defval:toggle_enable},
-				'simple': {name: 'simple', type: 'toggle', value:'', defval:toggle_enable},
+				'payload_uuid': {name: 'payload_uuid', type: 'toggle', value:0, defval:toggle_enable},
+				'profile_id': {name: 'profile_id', type: 'toggle', value:0, defval:toggle_enable},
+				'simple': {name: 'simple', type: 'toggle', value:0, defval:toggle_enable},
 				'updated_at': {name: 'updated_at', type: 'hidden', value:''}
 			},
 			'policy_profile': {
 				'allow_compromised_device': {name: 'allow_compromised_device', type: 'text', value:''},
-				'allow_remote_locate': {name: 'allow_remote_locate', type: 'toggle', value:'', defval:toggle_enable},
-				'allow_remote_lock_factory_reset': {name: 'allow_remote_lock_factory_reset', type: 'toggle', value:'', defval:toggle_enable},
-				'call_logging': {name: 'call_logging', type: 'toggle', value:'', defval:toggle_enable},
+				'allow_remote_locate': {name: 'allow_remote_locate', type: 'toggle', value:0, defval:toggle_enable},
+				'allow_remote_lock_factory_reset': {name: 'allow_remote_lock_factory_reset', type: 'toggle', value:0, defval:toggle_enable},
+				'call_logging': {name: 'call_logging', type: 'toggle', value:0, defval:toggle_enable},
 				'created_at': {name: 'created_at', type: 'hidden', value:''},
 				'description': {name: 'description', type: 'textarea', value:''},
 				'id': {name: 'id', type: 'text', value:''},
@@ -982,7 +1181,7 @@ var listData = {
 				'org_name': {name: 'org_name', type: 'text', value:''},
 				'ownership_type': {name: 'ownership_type', type: 'text', value:''},
 				'profile_name': {name: 'profile_name', type: 'text', value:''},
-				'sms_logging': {name: 'sms_logging', type: 'toggle', value:'', defval:toggle_enable},
+				'sms_logging': {name: 'sms_logging', type: 'toggle', value:0, defval:toggle_enable},
 				'status': {name: 'status', type: 'text', value:''},
 				'type': {name: 'type', type: 'text', value:''},
 				'updated_at': {name: 'updated_at', type: 'hidden', value:''}
@@ -995,9 +1194,9 @@ var listData = {
 				'updated_at': {name: 'updated_at', type: 'hidden', value:''}
 			},
 			// 'policy_wifi': {
-			// 	'ap_name': {name: 'ap_name', type: 'toggle', value:'', defval:toggle_enable}
+			// 	'ap_name': {name: 'ap_name', type: 'toggle', value:0, defval:toggle_enable}
 			// 	// 'created_at': {name: 'created_at', type: 'hidden', value:''},
-			// 	// 'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
+			// 	// 'id': {name: 'id', type: 'toggle', value:0, defval:toggle_enable},
 			// 	// 'policy_gw_status': {name: 'policy_gw_status', type: 'text', value:''},
 			// 	// 'profile': {name: 'profile', type: 'text', value:''},
 			// 	// 'updated_at': {name: 'updated_at', type: 'hidden', value:''}
@@ -1007,7 +1206,7 @@ var listData = {
 				'ap_name': {name: 'ap_name', type: 'text', value:''},
 				'ap_status': {name: 'ap_status', type: 'text', value:''},
 				'created_at': {name: 'created_at', type: 'hidden', value:''},
-				'id': {name: 'id', type: 'toggle', value:'', defval:toggle_enable},
+				'id': {name: 'id', type: 'toggle', value:0, defval:toggle_enable},
 				'location_id': {name: 'location_id', type: 'text', value:''},
 				'mac_address': {name: 'mac_address', type: 'text', value:''},
 				'updated_at': {name: 'updated_at', type: 'hidden', value:''}
@@ -1015,3 +1214,14 @@ var listData = {
 		}			
 	}
 }
+
+
+// $.each(listData.details, function(k,v){
+// 	// console.log(k,v)
+// 	$.each(v.data, function(k1,v1){
+// 		// console.log(k1,v1)
+// 		$.each(v1.list, function(k2,v2){
+// 			console.log(v.set, k2,v2)
+// 		})
+// 	})
+// })
